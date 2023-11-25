@@ -8,6 +8,7 @@
 #include <iostream>
 #include <regex>
 #include <set>
+#include <cassert>
 
 using namespace std;
 void NFA::printNFA() {
@@ -29,81 +30,180 @@ void NFA::printNFA() {
 
 
 }
-void NFA::buildNFA(std::vector<char *> vector1) {
-    std::stack<NFA_State*> nfaStack;
+NFA* NFA::buildNFA(vector<string> expression) {
+    stack < NFA* > s;
 
-    for (auto& rule : vector1) {
-        if (isOperand(*rule)) {
-            NFA_State* operand1 = new NFA_State();
-            NFA_State* operand2 = new NFA_State();
-            operand1->addTransition(*rule, operand2);
-            nfaStack.push(operand1);
-        } else {
-            NFA_State* result = new NFA_State();
-            if (*rule == '*') {
-                NFA_State* nfa = nfaStack.top(); nfaStack.pop();
-                result->addEpsilonTransition(nfa);
-                nfa->getTransitions()[EPSILON].back()->addEpsilonTransition(result);
-            } else if (*rule == '|') {
-                NFA_State* nfa2 = nfaStack.top(); nfaStack.pop();
-                NFA_State* nfa1 = nfaStack.top(); nfaStack.pop();
-                result->addEpsilonTransition(nfa1);
-                result->addEpsilonTransition(nfa2);
-                nfa1->getTransitions()[EPSILON].back()->addEpsilonTransition(result);
-                nfa2->getTransitions()[EPSILON].back()->addEpsilonTransition(result);
-            } else if (*rule == '.') {
-                NFA_State* nfa2 = nfaStack.top(); nfaStack.pop();
-                NFA_State* nfa1 = nfaStack.top(); nfaStack.pop();
-                nfa1->getTransitions()[EPSILON].back()->addEpsilonTransition(nfa2);
-                result = nfa1;
+    for(int i = 0;i < (int)expression.size();++i)
+    {
+        if(expression[i] == " ")
+        {
+            assert(s.size() >= 2 and "error");
+            NFA *A = s.top();    s.pop();
+            NFA *B = s.top();    s.pop();
+            B ->concatenate(A);
+            s.push(B);
+        }
+        else if(expression[i] ==ZERO_OR_MORE)
+        {
+            NFA *A = s.top();    s.pop();
+            A ->ZeroOrMore();
+            s.push(A);
+        }
+        else if(expression[i] == ONE_OR_MORE)
+        {
+            NFA *A = s.top();    s.pop();
+            A->OneOrMore();
+            s.push(A);
+        }
+        else if(expression[i] == UNION)
+        {
+            assert(s.size() >= 2 and "error");
+            NFA *A = s.top();    s.pop();
+            NFA *B = s.top();    s.pop();
+            B -> OR(A);
+            s.push(B);
+        }
+        else if(expression[i] == "\\L")
+        {
+            NFA *str = new NFA();
+            str -> start_state = new NFA_State(false);
+            str -> accept_state = new NFA_State(false);
+
+            str -> start_state -> addTransition('\0' , str -> accept_state);
+            s.push(str);
+        }
+        else if((i + 2) < (int)expression.size() and expression[i].size() * expression[i + 1].size() * expression[i + 2].size() == 1 and
+                expression[i + 2] == "-" and
+                ((isalpha(expression[i][0]) and isalpha(expression[i + 1][0])) or
+                 (isdigit(expression[i][0]) and isdigit(expression[i + 1][0]))))
+        {
+            char a = expression[i++][0];
+            char b = expression[i++][0];
+
+            assert(expression[i] == "-" and "error invalid postfix");
+
+            NFA *range = new NFA();
+            range -> start_state = new NFA_State(false);
+            range -> accept_state = new NFA_State(false);
+            for(int j = a;j <= b;++j)
+                range -> start_state -> addTransition(j , range -> accept_state);
+
+            range -> accept_state -> setFinalState(true);
+            s.push(range);
+        }
+        else
+        {
+            NFA *nfa = new NFA();
+            nfa -> start_state = new NFA_State(false);
+            nfa -> accept_state = new NFA_State(false);
+
+            int z = 0;
+            if(expression[i][z] == '\\')      ++z;
+
+            nfa -> start_state -> addTransition(expression[i][z++] , nfa -> accept_state);
+
+            while(z < (int)expression[i].size())
+            {
+                if(expression[i][z] == '\\')
+                    ++z;
+
+                nfa -> extend(expression[i][z++]);
             }
-            nfaStack.push(result);
+            s.push(nfa);
         }
     }
 
-    // The final NFA is on top of the stack
-    NFA_State* nfa = nfaStack.top();
-    nfaStack.pop();
-    start_state = nfa;
+    NFA *result = s.top();    s.pop();
+
+    return result;
 }
 
+bool NFA:: isOperand(char rule) {
+    return rule != '|' && rule != '*' && rule != '+' && rule != '?' && rule != '.';
+
+}
 
 
 NFA::~NFA() = default;
 
 NFA::NFA() = default;
-bool isIdentifier(const std::string& token) {
-    // Check if the token matches the pattern for identifiers
-    // An identifier is a letter followed by zero or more letters or digits
-    std::regex pattern("[a-zA-Z][a-zA-Z0-9]*");
-    return std::regex_match(token, pattern);
+
+
+
+
+
+
+
+void NFA::OneOrMore() {
+    NFA_State* newStart = new NFA_State(false);
+    NFA_State* newEnd = new NFA_State(false);
+
+    this -> accept_state -> setFinalState(false);
+    this -> accept_state -> addTransition(EPSILON, newEnd);
+
+    newStart -> addTransition(EPSILON, this -> start_state);
+    this -> accept_state -> addTransition(EPSILON, newEnd);
+    this -> start_state = newStart;
+
+    this -> accept_state = newEnd;
+    this -> accept_state -> setFinalState(true);
 }
 
-bool isNumber(const std::string& token) {
-    // Check if the token matches the pattern for numbers
-    // A number is an unsigned integer or a floating-point number
-    regex pattern("[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?");
-    return regex_match(token, pattern);
+
+void NFA::ZeroOrMore() {
+    // Zero or One: nfa?
+    OneOrMore();
+    this -> start_state -> addTransition(EPSILON, this -> accept_state);
 }
 
-bool isKeyword(const std::string& token) {
-    // Check if the token is a keyword
-    // The keywords are: int, float, boolean, if, else, while
-    set<string> keywords = {"int", "float", "boolean", "if", "else", "while"};
-    return keywords.count(token) > 0;
+void NFA::extend(char c) {
+    this -> accept_state ->setFinalState(false);
+    auto* new_acc = new NFA_State(false);
+    this -> accept_state -> addTransition(c, new_acc);
+    new_acc -> setFinalState(true);
+    new_acc -> id= this -> id++;
+    this -> accept_state = new_acc;
+    this -> states.push_back(new_acc);
 }
 
-bool isOperator(const std::string& token) {
-    // Check if the token is an operator
-    // The operators are: +, -, *, /, =, <=, <, >, >=, !=, ==
-    set<string> operators = {"+", "-", "*", "/", "=", "<=", "<", ">", ">=", "!=", "=="};
-    return operators.count(token) > 0;
+void NFA::join(NFA *pNfa) {
+    auto* newStart = new NFA_State(false);
+    newStart ->addTransition(EPSILON, this -> start_state);
+    newStart -> addTransition(EPSILON, pNfa-> start_state);
+    this -> start_state = newStart;
+    this -> accept_state = nullptr;
 }
 
-bool isPunctuation(const std::string& token) {
-    // Check if the token is a punctuation symbol
-    // The punctuation symbols are parentheses, curly brackets, commas and semicolons
-    set<string> punctuation = {"(", ")", "{", "}", ",", ";"};
-    return punctuation.count(token) > 0;
+
+void NFA::OR(NFA* A)
+{
+    auto* newStart = new NFA_State(false);
+    auto* newEnd = new NFA_State(false);
+
+    newStart -> addTransition(EPSILON, this -> start_state);
+    newStart -> addTransition(EPSILON, A -> start_state);
+
+    this -> accept_state -> addTransition(EPSILON, newEnd);
+    A -> accept_state -> addTransition(EPSILON, newEnd);
+
+
+    this -> accept_state -> setFinalState(false);
+    A -> accept_state -> setFinalState(false);
+
+
+
+    this -> start_state = newStart;
+    this -> accept_state = newEnd;
+
+    this -> accept_state -> setFinalState(true);
 }
+
+void NFA::concatenate(NFA *A) {
+    this -> start_state -> addTransition(EPSILON, A -> start_state);
+    this -> accept_state -> setFinalState(false);
+    this -> accept_state = A -> accept_state;
+
+}
+
+
 

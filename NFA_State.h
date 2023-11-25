@@ -10,14 +10,16 @@ using namespace std;
 
 class NFA_State {
 public:
-    NFA_State();
+    NFA_State( bool isFinal);
     ~NFA_State();
     void addTransition(char rule, NFA_State *next_state);
     void addEpsilonTransition(NFA_State *next_state);
-    bool isFinalState();
+    bool isFinalState() ;
+    void setFinalState(bool isFinal);
     map<char, vector<NFA_State*>> getTransitions();
-    map<char, vector<NFA_State*>> getEpsilonTransitions();
     vector<NFA_State*> getEpsilonClosure();
+    int id{};
+
 private:
     bool isFinal;
     map<char, vector<NFA_State*>> transitions;
