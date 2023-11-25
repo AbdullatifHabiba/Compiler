@@ -55,8 +55,38 @@ build CMakeFiles/compilers.dir/main.cpp.o: CXX_COMPILER__compilers_unscanned_Deb
   OBJECT_DIR = CMakeFiles/compilers.dir
   OBJECT_FILE_DIR = CMakeFiles/compilers.dir
 
-build CMakeFiles/compilers.dir/Lexical_Analyzer_Generator.cpp.o: CXX_COMPILER__compilers_unscanned_Debug /home/abdu/CLionProjects/compilers/Lexical_Analyzer_Generator.cpp || cmake_object_order_depends_target_compilers
-  DEP_FILE = CMakeFiles/compilers.dir/Lexical_Analyzer_Generator.cpp.o.d
+build CMakeFiles/compilers.dir/NFA.cpp.o: CXX_COMPILER__compilers_unscanned_Debug /home/abdu/CLionProjects/compilers/NFA.cpp || cmake_object_order_depends_target_compilers
+  DEP_FILE = CMakeFiles/compilers.dir/NFA.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/compilers.dir
+  OBJECT_FILE_DIR = CMakeFiles/compilers.dir
+
+build CMakeFiles/compilers.dir/DFA.cpp.o: CXX_COMPILER__compilers_unscanned_Debug /home/abdu/CLionProjects/compilers/DFA.cpp || cmake_object_order_depends_target_compilers
+  DEP_FILE = CMakeFiles/compilers.dir/DFA.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/compilers.dir
+  OBJECT_FILE_DIR = CMakeFiles/compilers.dir
+
+build CMakeFiles/compilers.dir/NFA_State.cpp.o: CXX_COMPILER__compilers_unscanned_Debug /home/abdu/CLionProjects/compilers/NFA_State.cpp || cmake_object_order_depends_target_compilers
+  DEP_FILE = CMakeFiles/compilers.dir/NFA_State.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/compilers.dir
+  OBJECT_FILE_DIR = CMakeFiles/compilers.dir
+
+build CMakeFiles/compilers.dir/Scanner.cpp.o: CXX_COMPILER__compilers_unscanned_Debug /home/abdu/CLionProjects/compilers/Scanner.cpp || cmake_object_order_depends_target_compilers
+  DEP_FILE = CMakeFiles/compilers.dir/Scanner.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/compilers.dir
+  OBJECT_FILE_DIR = CMakeFiles/compilers.dir
+
+build CMakeFiles/compilers.dir/Matcher.cpp.o: CXX_COMPILER__compilers_unscanned_Debug /home/abdu/CLionProjects/compilers/Matcher.cpp || cmake_object_order_depends_target_compilers
+  DEP_FILE = CMakeFiles/compilers.dir/Matcher.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/compilers.dir
+  OBJECT_FILE_DIR = CMakeFiles/compilers.dir
+
+build CMakeFiles/compilers.dir/DFA_State.cpp.o: CXX_COMPILER__compilers_unscanned_Debug /home/abdu/CLionProjects/compilers/DFA_State.cpp || cmake_object_order_depends_target_compilers
+  DEP_FILE = CMakeFiles/compilers.dir/DFA_State.cpp.o.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles/compilers.dir
   OBJECT_FILE_DIR = CMakeFiles/compilers.dir
@@ -69,7 +99,7 @@ build CMakeFiles/compilers.dir/Lexical_Analyzer_Generator.cpp.o: CXX_COMPILER__c
 #############################################
 # Link the executable compilers
 
-build compilers: CXX_EXECUTABLE_LINKER__compilers_Debug CMakeFiles/compilers.dir/main.cpp.o CMakeFiles/compilers.dir/Lexical_Analyzer_Generator.cpp.o
+build compilers: CXX_EXECUTABLE_LINKER__compilers_Debug CMakeFiles/compilers.dir/main.cpp.o CMakeFiles/compilers.dir/NFA.cpp.o CMakeFiles/compilers.dir/DFA.cpp.o CMakeFiles/compilers.dir/NFA_State.cpp.o CMakeFiles/compilers.dir/Scanner.cpp.o CMakeFiles/compilers.dir/Matcher.cpp.o CMakeFiles/compilers.dir/DFA_State.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/compilers.dir
   POST_BUILD = :
