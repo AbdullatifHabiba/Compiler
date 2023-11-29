@@ -172,7 +172,9 @@ NFA* NFA::buildNFA(vector<string> expression) {
     }
 
     NFA *result = s.top();    s.pop();
-//    result->printNFA();
+    set<NFA_State*> vis;
+    result->printNFA(result->start_state,vis);
+    cout<<"================================"<<endl;
     return result;
 }
 
@@ -195,7 +197,7 @@ void NFA::OneOrMore() {
     this -> accept_state -> addTransition(EPSILON, newEnd);
 
     newStart -> addTransition(EPSILON, this -> start_state);
-    this -> accept_state -> addTransition(EPSILON, newEnd);
+    this -> accept_state -> addTransition(EPSILON, this->start_state);
     this -> start_state = newStart;
 
     this -> accept_state = newEnd;
@@ -222,8 +224,8 @@ void NFA::join(NFA *pNfa) {
     newStart ->addTransition(EPSILON, this -> start_state);
     newStart -> addTransition(EPSILON, pNfa-> start_state);
     this -> start_state = newStart;
-    this -> accept_state->addTransition(EPSILON, this->accept_state);
-    this -> accept_state->addTransition(EPSILON, pNfa->accept_state);
+//    this -> accept_state->addTransition(EPSILON, this->accept_state);
+//    this -> accept_state->addTransition(EPSILON, pNfa->accept_state);
 
 }
 

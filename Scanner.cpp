@@ -36,23 +36,23 @@ NFA *Scanner::getWords() {
     while (getline(is, line)) {
         if (line[0] == '{')                  // keyword
         {
-//            cout<<"parseKeyword"<< line<<endl;
+            cout<<"parseKeyword"<< line<<endl;
             parseKeyword(line);
         } else if (line[0] == '[')             // punctuation
         {
-//            cout<<"parsePunctuation :"<< line<<endl;
+            cout<<"parsePunctuation :"<< line<<endl;
 
             parsePunctuation(line);
         } else {
             for (int i = 0; i < (int) line.size(); ++i) {
                 if (line[i] == ':')          // regular expression
                 {
-//                    cout<<"regular expression :"<< line<<endl;
+                    cout<<"regular expression :"<< line<<endl;
                     parseExpression(line, i);
                     break;
                 } else if (line[i] == '=')     // regular Definition
                 {
-//                    cout<<"regular Definition :"<< line<<endl;
+                    cout<<"regular Definition :"<< line<<endl;
                     parseDefinition(line, i);
                     break;
                 }
@@ -61,7 +61,9 @@ NFA *Scanner::getWords() {
     }
     if (keywords != nullptr) {
         keywords->accept_state->setFinalState(true);
-
+        cout<<"keywords"<<endl;
+        set<NFA_State*>S;
+        keywords->printNFA(keywords->start_state,S);
 
         if (finalNFA == nullptr)
             finalNFA = keywords;
@@ -71,7 +73,9 @@ NFA *Scanner::getWords() {
 
     if (punctuation != nullptr) {
         punctuation->accept_state->setFinalState(true);
-
+        cout<<"punctuation"<<endl;
+        set<NFA_State*>S;
+        punctuation->printNFA(punctuation->start_state,S);
 
         if (finalNFA == nullptr)
             finalNFA = punctuation;
