@@ -15,13 +15,16 @@ private:
     bool isFinal;
 
 public:
-    DFA_State( bool isFinal);
+    DFA_State(set<NFA_State*> nfaStates);
     ~DFA_State();
+    set<NFA_State*> get_content();
     map<char, vector<DFA_State*>> getTransitions();
     bool isFinalState() ;
+    DFA_State* get_next(char rule);
+    void set_next(char ch, DFA_State *state);
     void setFinalState(bool isFinal);
     void addNFAState(NFA_State* nfaState);//add nfa states which correspond to the dfa state
-    int id{};//?????
+    int id{};
 };
 
 #endif //COMPILERS_DFA_STATE_H

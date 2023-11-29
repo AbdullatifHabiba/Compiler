@@ -16,9 +16,6 @@ bool NFA_State::isFinalState()  {
 map<char, vector<NFA_State *>> NFA_State::getTransitions() {
     return {};
 }
-vector<NFA_State*> NFA_State::getEpsilonClosure() {
-    return {};
-}
 
 NFA_State::NFA_State(bool isFinal) {
     this->isFinal = isFinal;

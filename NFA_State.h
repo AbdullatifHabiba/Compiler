@@ -17,7 +17,6 @@ public:
     bool isFinalState() ;
     void setFinalState(bool isFinal);
     map<char, vector<NFA_State*>> getTransitions();
-    vector<NFA_State*> getEpsilonClosure();
     int id{};
 
 private:
@@ -31,5 +30,3 @@ private:
 
 
 #endif //COMPILERS_NFA_STATE_H
-
-
