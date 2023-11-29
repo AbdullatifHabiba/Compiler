@@ -16,14 +16,6 @@ map<char, vector<NFA_State *>> NFA_State::getTransitions() {
     return transitions;
 }
 
-vector<NFA_State*> NFA_State::getEpsilonClosure() {
-    vector<NFA_State*> closure = epsilonTransitions;
-    for (NFA_State* state : epsilonTransitions) {
-        vector<NFA_State*> state_closure = state->getEpsilonClosure();
-        closure.insert(closure.end(), state_closure.begin(), state_closure.end());
-    }
-    return closure;
-}
 
 NFA_State::NFA_State(bool isFinal) {
     this->isFinal = isFinal;

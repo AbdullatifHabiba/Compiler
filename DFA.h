@@ -6,8 +6,24 @@
 #define COMPILERS_DFA_H
 
 
-class DFA {
+#include "DFA_State.h"
 
+class DFA {
+public:
+    DFA();
+    ~DFA();
+    /*convert NFA to DFA return as a vector of states*/
+    set<DFA_State*> convert_NFA_to_DFA(NFA_State* start);
+
+private:
+
+    void e_closure(NFA_State *s);
+
+    set<NFA_State*> e_closure(set<NFA_State*> T);
+
+    set<NFA_State*> move(set<NFA_State*> T, char rule);
+
+    set<char> get_alpha(NFA_State* S);
 };
 
 
