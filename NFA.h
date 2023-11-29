@@ -9,6 +9,8 @@
 #include <vector>
 #include <string>
 #include "NFA_State.h"
+#include <stack>
+#include <set>
 
 using namespace std;
 class NFA {
@@ -35,9 +37,24 @@ public:
     void concatenate(NFA*);
     void OR(NFA *A);
 
+    void printNFA(NFA_State *state, std::set<NFA_State *> &visited);
+
 private:
     int id = 0;
-    bool isOperand(char rule);
+
+    NFA *handleCharacter(vector<string> &expression, int &i);
+
+    static NFA *handleRange(vector<string> &expression, int &i);
+
+    static NFA *handleEpsilon();
+
+    static NFA *handleUnion(stack<NFA *> &s);
+
+    static NFA *handleOneOrMore(stack<NFA *> &s);
+    static NFA *handleZeroOrMore(stack<NFA *> &s);
+
+    static NFA *handleConcatenation(stack<NFA *> &s);
+
 
 };
 

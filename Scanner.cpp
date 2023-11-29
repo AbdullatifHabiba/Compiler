@@ -36,18 +36,23 @@ NFA *Scanner::getWords() {
     while (getline(is, line)) {
         if (line[0] == '{')                  // keyword
         {
+//            cout<<"parseKeyword"<< line<<endl;
             parseKeyword(line);
         } else if (line[0] == '[')             // punctuation
         {
+//            cout<<"parsePunctuation :"<< line<<endl;
+
             parsePunctuation(line);
         } else {
             for (int i = 0; i < (int) line.size(); ++i) {
                 if (line[i] == ':')          // regular expression
                 {
+//                    cout<<"regular expression :"<< line<<endl;
                     parseExpression(line, i);
                     break;
                 } else if (line[i] == '=')     // regular Definition
                 {
+//                    cout<<"regular Definition :"<< line<<endl;
                     parseDefinition(line, i);
                     break;
                 }
@@ -77,20 +82,20 @@ NFA *Scanner::getWords() {
     return finalNFA;
 }
 
-void Scanner::splitInput(const std::string &line) {
-    std::istringstream iss(line);
-    std::string word;
+//void Scanner::splitInput(const std::string &line) {
+//    std::istringstream iss(line);
+//    std::string word;
+//
+//    while (iss >> word) {
+//        char *cstr = new char[word.length() + 1];
+//        strcpy(cstr, word.c_str());
+//        words.push_back(cstr);
+//    }
+//}
 
-    while (iss >> word) {
-        char *cstr = new char[word.length() + 1];
-        strcpy(cstr, word.c_str());
-        words.push_back(cstr);
-    }
-}
-
-std::vector<char *> Scanner::readInput() {
-    return words;
-}
+//std::vector<char *> Scanner::readInput() {
+//    return words;
+//}
 
 
 void Scanner::parseKeyword(string &input) {
@@ -333,5 +338,9 @@ void Scanner::parseDefinition(string &input, int &i) {
         finalIdentifier += input.substr(k, i - k);
 
     identifiers[id] = finalIdentifier;
+}
+
+NFA *Scanner::getFinalNFA() {
+    return this->finalNFA;
 }
 

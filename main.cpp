@@ -7,19 +7,16 @@ int main() {
     Scanner scanner;
 
     string file_name ="/home/abdu/CLionProjects/compilers/input.txt";
-   NFA* nfa= scanner.scan(file_name);
-   for(auto& state : nfa->states)
-    {
-         cout << state << endl;
-         for(auto& transition : state->getTransitions())
-         {
-              cout << "\t" << transition.first << ": ";
-              for(auto& next_state : transition.second)
-              {
-                cout << next_state << " ";
-              }
-              cout << endl;
-         }
-}
+    scanner.scan(file_name);
+    NFA* final= scanner.getFinalNFA();
+//    final->printNFA();
+//
+//    for(const auto &identifier : scanner.identifiers) {
+//        cout << identifier.first << " : " << identifier.second << endl;
+//    }
+    set<NFA_State*> visited;
+    final-> printNFA(final->start_state, visited);
+
+
 }
 

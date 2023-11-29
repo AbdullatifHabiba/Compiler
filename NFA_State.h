@@ -18,10 +18,14 @@ public:
     void setFinalState(bool isFinal);
     map<char, vector<NFA_State*>> getTransitions();
     vector<NFA_State*> getEpsilonClosure();
-    int id{};
+    void set_id(int a);
+    int get_id() const;
+
 
 private:
     bool isFinal;
+    int id;
+    static int increase_id;
     map<char, vector<NFA_State*>> transitions;
     vector<NFA_State*> epsilonTransitions;
 

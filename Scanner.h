@@ -15,11 +15,11 @@ public:
     Scanner();
     ~Scanner();
     NFA* scan(string pFile );
-    static std::vector<char *> readInput();
     map < string , string > identifiers;
+    NFA* getFinalNFA();
+
 private:
     NFA * getWords();
-    static void splitInput(const std::string& line);
     string file;
 
     void parseKeyword(string &input);
