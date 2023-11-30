@@ -37,3 +37,15 @@ void NFA_State::set_id(int a) {
 int NFA_State::get_id() const {
     return this->id;
 }
+void NFA_State::set_priority(int p){
+    this->priority = p;
+}
+int NFA_State::get_priority() {
+    return this->priority;
+}
+void NFA_State::set_token(string t){
+    this->token = t;
+}
+string NFA_State::get_token() {
+    return this->token;
+}

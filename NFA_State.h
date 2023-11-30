@@ -6,6 +6,8 @@
 #define COMPILERS_NFA_STATE_H
 #include <map>
 #include <vector>
+#include <string>
+
 using namespace std;
 
 class NFA_State {
@@ -19,17 +21,20 @@ public:
     map<char, vector<NFA_State*>> getTransitions();
     void set_id(int a);
     int get_id() const;
+    void set_priority(int p);
+    int get_priority();
+    void set_token(string t);
+    string get_token();
 
 
 private:
     bool isFinal;
+    int priority;
+    string token;
     int id;
     static int increase_id;
     map<char, vector<NFA_State*>> transitions;
     vector<NFA_State*> epsilonTransitions;
-
-
-
 };
 
 
