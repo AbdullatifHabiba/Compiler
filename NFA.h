@@ -40,7 +40,6 @@ public:
     void printNFA(NFA_State *state, std::set<NFA_State *> &visited);
 
 private:
-    int id = 0;
 
     NFA *handleCharacter(vector<string> &expression, int &i);
 
