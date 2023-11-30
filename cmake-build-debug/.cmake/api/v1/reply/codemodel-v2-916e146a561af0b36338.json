@@ -6,7 +6,7 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.26"
@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "compilers::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-compilers-Debug-d285d4e55e0eebbf5f19.json",
+					"jsonFile" : "target-compilers-Debug-10d3ae560e918555317c.json",
 					"name" : "compilers",
 					"projectIndex" : 0
 				}
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/abdu/CLionProjects/compilers/cmake-build-debug",
-		"source" : "/home/abdu/CLionProjects/compilers"
+		"build" : "C:/Users/mahmo/CLionProjects/Compiler/cmake-build-debug",
+		"source" : "C:/Users/mahmo/CLionProjects/Compiler"
 	},
 	"version" : 
 	{

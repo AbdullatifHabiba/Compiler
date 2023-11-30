@@ -61,9 +61,9 @@ NFA *Scanner::getWords() {
     }
     if (keywords != nullptr) {
         keywords->accept_state->setFinalState(true);
-        cout<<"keywords"<<endl;
-        set<NFA_State*>S;
-        keywords->printNFA(keywords->start_state,S);
+//        cout<<"keywords"<<endl;
+//        set<NFA_State*>S;
+//        keywords->printNFA(keywords->start_state,S);
 
         if (finalNFA == nullptr)
             finalNFA = keywords;
@@ -73,9 +73,9 @@ NFA *Scanner::getWords() {
 
     if (punctuation != nullptr) {
         punctuation->accept_state->setFinalState(true);
-        cout<<"punctuation"<<endl;
-        set<NFA_State*>S;
-        punctuation->printNFA(punctuation->start_state,S);
+//        cout<<"punctuation"<<endl;
+//        set<NFA_State*>S;
+//        punctuation->printNFA(punctuation->start_state,S);
 
         if (finalNFA == nullptr)
             finalNFA = punctuation;
@@ -115,6 +115,8 @@ void Scanner::parseKeyword(string &input) {
         currentKeyword = new NFA();
         currentKeyword->start_state = new NFA_State(false);
         currentKeyword->accept_state = new NFA_State(false);
+        currentKeyword->accept_state->set_token("keyword");
+        currentKeyword->accept_state->set_priority(0);
         currentKeyword->start_state->addTransition(token[0], currentKeyword->accept_state);
 
         for (int i = 1; i < (int) token.size(); ++i)
@@ -143,6 +145,8 @@ void Scanner::parsePunctuation(string &input) {
         currentPunctuation = new NFA();
         currentPunctuation->start_state = new NFA_State(false);
         currentPunctuation->accept_state = new NFA_State(false);
+        currentPunctuation->accept_state->set_token("punctuation");
+        currentPunctuation->accept_state->set_priority(1);
         currentPunctuation->start_state->addTransition(token[0], currentPunctuation->accept_state);
 
         if (punctuation == nullptr) punctuation = currentPunctuation;
@@ -154,7 +158,7 @@ void Scanner::parseExpression(string &input, int &i) {
     string expression = input.substr(0, i);
 
     int k = ++i;
-
+    string token =  input.substr(0,i-1);
     string finalExpression;
     for (; i < (int) input.size(); ++i) {
         if (input[i] == ' ') {
@@ -199,6 +203,8 @@ void Scanner::parseExpression(string &input, int &i) {
     NFA *NFAExpression = (new NFA())->buildNFA(expressionPost);
 
     NFAExpression->accept_state->setFinalState(true);
+    NFAExpression->accept_state->set_token(token);
+    NFAExpression->accept_state->set_priority(2);
 
     if (finalNFA == nullptr) finalNFA = NFAExpression;
     else finalNFA->join(NFAExpression);
