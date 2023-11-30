@@ -32,22 +32,29 @@ void NFA::printNFA() {
 
 
 }
+int counter=0;
 void NFA::printNFA(NFA_State* state, set<NFA_State*>& visited) {
     // Check if the state has already been visited
     if (visited.find(state) != visited.end()) {
         return;
     }
+    if(state->isFinalState()){
+        counter++;
+        cout << "state id: "<< state->get_id()<< "  token: " << state->get_token() << endl<< counter<<endl;
+
+    }
     // Mark the state as visited
     visited.insert(state);
+//    cout << "state id: "<< state->get_id() << "   is it final?  " << state->isFinalState() << endl<< counter<<endl;
 
     // Print the state and its transitions
-    for (auto& transition : state->getTransitions()) {
+    /*for (auto& transition : state->getTransitions()) {
         cout << "State " << state->get_id() << " --" << transition.first << "--> ";
         for (auto& next_state : transition.second) {
             cout << "State " << next_state->get_id() <<" , ";
         }
         cout << endl;
-    }
+    }*/
 
     // Recursively print all reachable states
     for (auto& transition : state->getTransitions()) {
@@ -172,9 +179,9 @@ NFA* NFA::buildNFA(vector<string> expression) {
     }
 
     NFA *result = s.top();    s.pop();
-    set<NFA_State*> vis;
-    result->printNFA(result->start_state,vis);
-    cout<<"================================"<<endl;
+//    set<NFA_State*> vis;
+//    result->printNFA(result->start_state,vis);
+//    cout<<"================================"<<endl;
     return result;
 }
 
@@ -195,7 +202,8 @@ void NFA::OneOrMore() {
     NFA_State* newEnd = new NFA_State(false);
     this -> accept_state -> setFinalState(false);
     this -> accept_state -> addTransition(EPSILON, newEnd);
-
+    newEnd -> set_priority(this -> accept_state -> get_priority());
+    newEnd -> set_token(this -> accept_state -> get_token());
     newStart -> addTransition(EPSILON, this -> start_state);
     this -> accept_state -> addTransition(EPSILON, this->start_state);
     this -> start_state = newStart;
@@ -215,6 +223,8 @@ void NFA::extend(char c) {
     auto* new_acc = new NFA_State(false);
     this -> accept_state -> addTransition(c, new_acc);
     new_acc -> setFinalState(true);
+    new_acc -> set_priority(this -> accept_state -> get_priority());
+    new_acc -> set_token(this -> accept_state -> get_token());
     this -> accept_state = new_acc;
     this -> states.push_back(new_acc);
 }
@@ -251,6 +261,8 @@ void NFA::OR(NFA* A)
     this -> accept_state = newEnd;
 
     this -> accept_state -> setFinalState(true);
+    this -> accept_state -> set_priority(A -> accept_state -> get_priority());
+    this -> accept_state -> set_token(A -> accept_state -> get_token());
 }
 
 void NFA::concatenate(NFA *A) {
