@@ -4,6 +4,7 @@
 
 #include "DFA.h"
 #include <queue>
+#include <iostream>
 
 DFA::DFA() {
 
@@ -13,6 +14,7 @@ DFA::~DFA() {
 
 }
 set<NFA_State*> Mapped;
+//    std::cout << "State: " << s->get_id() <<" : "<<endl;
 // get each nfa state epsilon closure
 void DFA::e_closure(NFA_State *s)
 {
@@ -52,7 +54,7 @@ set<NFA_State*> DFA::move(set<NFA_State*> T, char input)
     {
         NFA_State *state = *i;
         set<NFA_State*> s1 ;
-        for (NFA_State *x : state->getTransitions()['@']) {
+        for (NFA_State *x : state->getTransitions()[input]) {
             s1.insert(x);
         }
         set<NFA_State*> s2 = e_closure(s1);
@@ -61,12 +63,96 @@ set<NFA_State*> DFA::move(set<NFA_State*> T, char input)
     return returned_set;
 }
 
-set<char> DFA::get_alpha(NFA_State *S) {
-    return set<char>();
+set<DFA_State*> DFA::convert_NFA_to_DFA(NFA_State* start)
+{
+    queue <DFA_State*> unmarked;      /*queue to add unmarked new D_states*/
+    set<DFA_State*> DFA;              /*returned DFA graphe*/
+    Mapped.clear();
+    e_closure(start);
+
+    DFA_State *s = new DFA_State();
+    s->set_content(Mapped);
+    DFA.insert(s);
+    unmarked.push(s);
+    set<char> alpha = get_alpha(start);
+    while(!unmarked.empty())
+    {
+        DFA_State *temp = unmarked.front();
+        unmarked.pop();
+
+        /*loop for all inputs on set alpha*/
+        for (std::set<char>::iterator it=alpha.begin(); it!=alpha.end(); ++it)
+        {
+            /*get destination from source temp on input it */
+            set<NFA_State*> destination = move(temp->get_content(),*it);
+
+
+            /*chech if the dest is not in DFA*/
+            bool flag = false;
+            DFA_State* test ;
+            for (std::set<DFA_State*>::iterator itr =DFA.begin(); itr !=DFA.end(); ++itr)
+            {
+                DFA_State* d = *itr;
+                if(d->get_content() == destination)
+                {
+                    flag = true;
+                    test = d;
+                    break;
+
+                }
+            }
+
+            if (!flag )
+            {
+                DFA_State *dest = new DFA_State();
+                dest->set_content(destination);
+                DFA.insert(dest);
+                unmarked.push(dest);
+                // cout << "rererere :::: " << dest -> get_name() << endl;
+                temp->addTransition(*it,dest);
+            }
+            else
+            {
+                temp->addTransition(*it,test);
+            }
+        }
+    }
+    return DFA;
 }
 
-set<DFA_State *> DFA::convert_NFA_to_DFA(NFA_State *start) {
-    return set<DFA_State *>();
+set<char> DFA::get_alpha(NFA_State* S)
+{
+    set <char> alpha;
+
+    queue < NFA_State* > current;
+    set < NFA_State* > visited;
+
+    current.push (S);
+    visited.insert (S);
+
+    while ( !current.empty() )
+    {
+        NFA_State* x = current.front();
+        current.pop();
+        for(auto it = x->getTransitions().begin(); it != x->getTransitions().end(); ++it)
+        {
+            alpha.insert (it->first);
+            for (NFA_State* n : (it -> second) )
+            {
+                if (visited.find(n) == visited.end())
+                {
+                    visited.insert (n);
+                    current.push (n);
+                }
+            }
+        }
+    }
+    alpha.erase('@');
+    alpha.erase('\0');
+    for (std::set<char>::iterator it=alpha.begin(); it!=alpha.end(); ++it){
+        cout << *it << "  ";
+    }
+    return alpha;
 }
 
 

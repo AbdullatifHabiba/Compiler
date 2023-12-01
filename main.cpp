@@ -6,7 +6,7 @@ int main() {
     // intilize  scanner
     Scanner scanner;
 
-    string file_name ="C:\\Users\\mahmo\\CLionProjects\\Compiler\\input.txt";
+    string file_name ="C:/Users/Hardware/Desktop/TODO/Compiler1/input.txt";
     scanner.scan(file_name);
     NFA* final= scanner.getFinalNFA();
 //    final->printNFA();
