@@ -11,19 +11,23 @@
 
 class DFA_State {
 private:
-    std::set<NFA_State*> nfaStates; // Set of NFA states in this DFA state
-    bool isFinal;
+    std::set<NFA_State*> content; // Set of NFA states in this DFA state
+    map<char, DFA_State*> transitions;
+    int id;
+    static int increased_id;
 
 public:
     DFA_State();
     ~DFA_State();
+    bool isFinal;
     set<NFA_State*> get_content();
+    void set_content(set<NFA_State*>);
     map<char, DFA_State*> getTransitions();
+    void addTransition(char rule, DFA_State *next_state);
     bool isFinalState() ;
-    void set_next(char ch, DFA_State *state);
-    void setFinalState(bool isFinal);
-    void addNFAState(NFA_State* nfaState);//add nfa states which correspond to the dfa state
-    int id{};
+    DFA_State* get_next(char ch);
+    int get_id() const;
+
 };
 
 #endif //COMPILERS_DFA_STATE_H
