@@ -14,7 +14,7 @@ public:
     ~DFA();
     /*convert NFA to DFA return as a vector of states*/
     set<DFA_State*> convert_NFA_to_DFA(NFA_State* start);
-
+    void printDFA(set<DFA_State *> DFA);
 private:
 
     void e_closure(NFA_State *s);
@@ -24,6 +24,7 @@ private:
     set<NFA_State*> move(set<NFA_State*> T, char rule);
 
     set<char> get_alpha(NFA_State* S);
+
 };
 
 

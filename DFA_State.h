@@ -18,7 +18,6 @@ private:
 
 public:
     DFA_State();
-    DFA_State(bool is_accepted);
     ~DFA_State();
     bool isFinal;
     set<NFA_State*> get_content();
@@ -27,8 +26,6 @@ public:
     void addTransition(char rule, DFA_State *next_state);
     bool isFinalState() ;
     DFA_State* get_next(char ch);
-    void setFinalState(bool isFinal);
-    void set_id(int a);
     int get_id() const;
 
 };

@@ -134,25 +134,43 @@ set<char> DFA::get_alpha(NFA_State* S)
     {
         NFA_State* x = current.front();
         current.pop();
-        for(auto it = x->getTransitions().begin(); it != x->getTransitions().end(); ++it)
+        auto transitions = x->getTransitions();
+        for (auto it = transitions.begin(); it != transitions.end(); ++it)
         {
-            alpha.insert (it->first);
-            for (NFA_State* n : (it -> second) )
+            alpha.insert(it->first);
+
+            for (NFA_State* n : it->second)
             {
-                if (visited.find(n) == visited.end())
+                if (n != nullptr && visited.find(n) == visited.end())
                 {
-                    visited.insert (n);
-                    current.push (n);
+                    visited.insert(n);
+                    current.push(n);
                 }
             }
         }
+
     }
     alpha.erase('@');
     alpha.erase('\0');
     for (std::set<char>::iterator it=alpha.begin(); it!=alpha.end(); ++it){
-        cout << *it << "  ";
+      //  cout << *it << "  ";
     }
     return alpha;
 }
 
-
+void DFA::printDFA(set <DFA_State*> DFA) {
+    for (auto element : DFA) {
+        cout<<"State" <<element->get_id();
+        for(auto j : element->get_content())
+            cout<<" State :" <<j->get_id();
+        if(element->isFinalState()==0)
+            cout<<" <<<<<<<---- not final "<<endl;
+        else
+            cout<<" ---->>>>>> Final"<<endl;
+        for(auto i : element->getTransitions())
+        {
+            cout<<"----->> "<<i.first<<" >>----- ";
+            cout<<"State "<<i.second->get_id()<<endl;
+        }
+    }
+}

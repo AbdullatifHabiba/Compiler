@@ -2,10 +2,21 @@
 // Created by abdu on 11/25/23.
 //
 
+#include <iostream>
 #include "DFA_State.h"
 
 void DFA_State::set_content(set<NFA_State *> Content) {
     this->content = Content;
+    bool flag = false;
+    for (set<NFA_State*>::iterator i = this->content.begin(); i != this->content.end(); i++)
+    {
+        NFA_State *temp = *i;
+        if(temp->isFinalState())
+        {
+            flag = true;
+        }
+    }
+    this->isFinal = flag;
 }
 
 set<NFA_State *> DFA_State::get_content() {
@@ -18,22 +29,7 @@ map<char, DFA_State*> DFA_State::getTransitions() {
 
 
 DFA_State::DFA_State() {
-    this->content = content;
-    bool flag = false;
-    for (set<NFA_State*>::iterator i = this->content.begin(); i != this->content.end(); i++)
-    {
-        NFA_State *temp = *i;
-        if(temp->isFinalState())
-        {
-            flag = true;
-        }
-    }
-    this->isFinal = flag;
     this->id=increased_id++;
-}
-
-void DFA_State::setFinalState(bool isFinal) {
-    this->isFinal = isFinal;
 }
 
 bool DFA_State::isFinalState() {
@@ -57,18 +53,12 @@ void DFA_State::addTransition(char rule, DFA_State *next_state) {
 DFA_State::~DFA_State() = default;
 int DFA_State::increased_id = 1;
 
-void DFA_State::set_id(int a) {
-    this->id=a;
-}
 
 int DFA_State::get_id() const {
     return this->id;
 }
 
 
-DFA_State::DFA_State(bool is_accepted) {
-    this -> id = increased_id++;
-}
 
 
 
