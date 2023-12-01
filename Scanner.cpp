@@ -36,7 +36,7 @@ NFA *Scanner::getWords() {
     while (getline(is, line)) {
         if (line[0] == '{')                  // keyword
         {
-            cout<<"parseKeyword"<< line<<endl;
+            cout<<"parseKeyword : "<< line<<endl;
             parseKeyword(line);
         } else if (line[0] == '[')             // punctuation
         {
@@ -86,20 +86,7 @@ NFA *Scanner::getWords() {
     return finalNFA;
 }
 
-//void Scanner::splitInput(const std::string &line) {
-//    std::istringstream iss(line);
-//    std::string word;
-//
-//    while (iss >> word) {
-//        char *cstr = new char[word.length() + 1];
-//        strcpy(cstr, word.c_str());
-//        words.push_back(cstr);
-//    }
-//}
 
-//std::vector<char *> Scanner::readInput() {
-//    return words;
-//}
 
 
 void Scanner::parseKeyword(string &input) {
