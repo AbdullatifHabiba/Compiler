@@ -9,26 +9,24 @@
 #include <string>
 #include <vector>
 #include "NFA_State.h"
+#include "DFA_State.h"
 
 class Matcher {
+private:
+    string out;
+    vector<string> transitionTable;
+    string output_file_name;
+
 public:
     Matcher();
     ~Matcher();
-
-    std::vector<std::string> get_sym_table();
-    void set_output_file_name(std::string output_file_name);
-
-    void matchFile(const string &file_name, NFA_State *start);
-
-private:
-    std::string output_file_name;
-    std::string out;
-    std::vector<std::string> symbol_table;
-
-    void write_output_file(std::string name);
-    bool run(std::string str, NFA_State* start);
-
+    void matchFileWithDFA(const string& file_name, DFA_State* start);
+    void setOutputFileName(string outputFileName);
+    void writeOutputToFile(string name);
+    bool runDFA(string str, DFA_State* start);
+    vector<string> getTransitionTable();
 };
+
 
 #endif //COMPILERS_MATCHER_H
 

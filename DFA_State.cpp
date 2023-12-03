@@ -19,7 +19,23 @@ void DFA_State::set_content(set<NFA_State *> content_){
     for (set<NFA_State*>::iterator i = content_.begin(); i != content_.end(); i++)
     {
         NFA_State *temp = *i;
-        this->set_priority(flag, temp);
+        if(temp->isFinalState())
+        {
+            if (!flag)
+            {
+                this -> token = temp-> get_token();
+                this -> priority = temp-> get_priority();
+            }
+            else
+            {
+                if (this -> priority > temp -> get_priority())
+                {
+                    this -> token = temp->get_token();
+                    this -> priority = temp->get_priority();
+                }
+            }
+            flag = true;
+        }
     }
     if (content_.size() == 0)
     {
@@ -28,24 +44,8 @@ void DFA_State::set_content(set<NFA_State *> content_){
     this->isFinal = flag;
 }
 
-void DFA_State::set_priority(int flag, NFA_State* temp ) {
-    if(temp->isFinalState())
-    {
-        if (!flag)
-        {
-            this -> token = temp-> get_token();
-            this -> priority = temp-> get_priority();
-        }
-        else
-        {
-            if (this -> priority > temp -> get_priority())
-            {
-                this -> token = temp->get_token();
-                this -> priority = temp->get_priority();
-            }
-        }
-        flag = true;
-    }
+void DFA_State::set_priority(bool flag, NFA_State* temp ) {
+
 }
 
 set<NFA_State*> DFA_State::get_content()

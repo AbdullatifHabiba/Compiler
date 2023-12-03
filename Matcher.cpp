@@ -1,51 +1,53 @@
 #include <sstream>
 #include <iterator>
+#include <utility>
 #include "Matcher.h"
 using namespace std;
 Matcher::Matcher() {
     // Constructor implementation
+    out = "";
+    transitionTable = std::vector<std::string>();
+    output_file_name = "";
 }
 
-Matcher::~Matcher() {
-    // Destructor implementation
-}
+Matcher::~Matcher() = default;
 
-void Matcher::matchFile(const string& file_name, NFA_State* start) {
+void Matcher::matchFileWithDFA(const std::string& file_name, DFA_State* start) {
     // Read and tokenize the file
-    string str = "", line;
-    ifstream myfile(file_name.c_str());
+    std::string str = "", line;
+    std::ifstream myfile(file_name.c_str());
     if (myfile.is_open()) {
         while (getline(myfile, line)) {
             str = str + ' ' + line;
         }
         myfile.close();
     } else{
-        cout<<"can't open file"<<endl;
+        std::cout << "can't open file" << std::endl;
     }
-    cout<<str<<endl;
+    std::cout << str << std::endl;
 
     std::istringstream buf(str);
     std::istream_iterator<std::string> beg(buf), end;
     std::vector<std::string> tokens(beg, end);
 
-    // Process each token using the run method
+    // Process each token using the runDFA method
     for (const auto& token : tokens) {
-        run(token, start);
+        runDFA(token, start);
     }
 
     // Write the output to the file
-    write_output_file(output_file_name);
+    writeOutputToFile(output_file_name);
 }
 
-std::vector<std::string> Matcher::get_sym_table() {
-    return symbol_table;
+std::vector<std::string> Matcher::getTransitionTable() {
+    return transitionTable;
 }
 
-void Matcher::set_output_file_name(std::string output_file_name) {
-    this->output_file_name = output_file_name;
+void Matcher::setOutputFileName(string outputFile) {
+    this->output_file_name = std::move(outputFile);
 }
 
-void Matcher::write_output_file(std::string name) {
+void Matcher::writeOutputToFile(std::string name) {
     std::ofstream myfile(name.c_str());
     if (myfile.is_open()) {
         myfile << out;
@@ -53,10 +55,11 @@ void Matcher::write_output_file(std::string name) {
     }
 }
 
-bool Matcher::run(std::string str, NFA_State* start) {
-    int pos = 0, error = -1;
-    NFA_State *temp = start;
-    NFA_State *last = nullptr;
+bool Matcher::runDFA(std::string str, DFA_State* start) {
+    int pos = 0;
+    DFA_State *temp = start;
+    DFA_State *last = nullptr;
+//   cout << "str: " << str << " token : "<<temp->get_token() << endl;
 
     if (temp->isFinalState()) {
         last = temp;
@@ -64,19 +67,9 @@ bool Matcher::run(std::string str, NFA_State* start) {
     }
 
     for (int i = 0; i < str.size(); i++) {
-        if (str[i] == '!') {
-            if (i + 1 < str.size()) {
-                if (str[i + 1] != '=') {
-                    error = i;
-                    break;
-                }
-            }
-        }
-
-        temp = temp->getTransitions()[str[i]][0]; // Assuming non-deterministic transitions, adjust accordingly
-
-        if (temp->get_id() == -1) {
-            error = i;
+        temp = temp->get_next();
+        cout<<str[i]<<" "<<temp->get_token()<<" " <<temp->isFinalState()<<"  state_number "<<  temp->get_id() <<endl;
+        if (temp == nullptr) {
             break;
         } else if (temp->isFinalState()) {
             last = temp;
@@ -84,7 +77,9 @@ bool Matcher::run(std::string str, NFA_State* start) {
         }
     }
 
-    if (temp->isFinalState() && temp == last) {
+    if (temp != nullptr && temp->isFinalState() && temp == last) {
+        // Token with acceptance, process the accepted part
+
         // Token is accepted
         std::string type = temp->get_token();
 
@@ -95,7 +90,7 @@ bool Matcher::run(std::string str, NFA_State* start) {
         }
 
         if (type == "id") {
-            this->symbol_table.push_back(str);
+            this->transitionTable.push_back(str);
         }
 
         return true;
@@ -110,28 +105,18 @@ bool Matcher::run(std::string str, NFA_State* start) {
             }
 
             if (type == "id") {
-                this->symbol_table.push_back(str.substr(0, pos + 1));
+                this->transitionTable.push_back(str.substr(0, pos + 1));
             }
 
             std::string reminder = str.substr(pos + 1);
-            return run(reminder, start);
-        } else if (last == nullptr && (temp->get_id() == -1 || temp->get_token() == "Phi") && error > -1) {
-            // Token with an error
-            this->out = this->out + "ERROR in symbol  " + str[error] + '\n';
-            std::string reminder = str.substr(error + 1);
-            return run(reminder, start);
+            return runDFA(reminder, start);
         } else {
-            // Token not accepted, may not be reached
-            if (str[error] == '!') {
-                this->out = this->out + "ERROR in symbol  " + str[error] + '\n';
-                std::string reminder = str.substr(error + 1);
-                return run(reminder, start);
-            } else {
-                this->out = this->out + "ERROR in symbol  " + str + '\n';
-            }
+            // Token not accepted
+            this->out = this->out + "ERROR in symbol  " + str + '\n';
         }
     }
 
     return false;
 }
+
 

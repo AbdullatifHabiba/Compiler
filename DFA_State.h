@@ -33,7 +33,7 @@ public:
     void addTransition(char ch, DFA_State *state);
     map<char, DFA_State *> getTransitions();
 
-    void set_priority(int flag, NFA_State *temp);
+    void set_priority(bool flag, NFA_State *temp);
 };
 
 #endif //COMPILERS_DFA_STATE_H
