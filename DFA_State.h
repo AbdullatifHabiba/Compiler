@@ -25,6 +25,8 @@ public:
     void addTransition(char ch, DFA_State *state);
 
     void set_priority(bool flag, NFA_State *temp);
+    void set_token(string s);
+    void set_final(bool f);
     /*need it as public*/
     std::map<char,DFA_State*> transactions;
     map<char, DFA_State *> getTransitions() ;

@@ -1,7 +1,7 @@
 #include "DFA_State.h"
 #include<bits/stdc++.h>
 
-int DFA_State::increase_id = 1;
+int DFA_State::increase_id = 0;
 int DFA_State::min_increase_id = 0;
 
 DFA_State::DFA_State()
@@ -87,4 +87,12 @@ void DFA_State::set_priority(bool flag, NFA_State *temp) {
 
 map<char, DFA_State *> DFA_State::getTransitions() {
     return this->transactions;
+}
+
+void DFA_State::set_token(string s) {
+    this->token = s;
+}
+
+void DFA_State::set_final(bool f) {
+    this->isFinal = f;
 }

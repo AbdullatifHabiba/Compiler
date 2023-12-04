@@ -15,4 +15,6 @@ add_executable(compilers main.cpp
         Matcher.cpp
         Matcher.h
         DFA_State.cpp
-        DFA_State.h)
+        DFA_State.h
+        Minimize.cpp
+        Minimize.h)
