@@ -83,7 +83,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
         // Token is accepted
         std::string type = temp->get_token();
-        cout << "type: " << type<< " state  "<<temp->get_id() << endl;
+
         if (type == "keyword" || type == "punctuation") {
             this->out = this->out + str + '\n';
         } else {
