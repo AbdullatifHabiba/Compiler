@@ -16,12 +16,15 @@ void DFA_State::set_content(const set<NFA_State *>& content_){
     bool flag = false;
     for (auto temp : content_)
     {
+        cout<< "returned token is "<< temp->get_token()<< " " << temp ->isFinalState()<<endl;
         if(temp->isFinalState())
         {
+
             if (!flag)
             {
+
                 this -> token = temp-> get_token();
-                cout<< "returned priority is "<< temp-> get_priority()<<endl;
+
                 this -> priority = temp-> get_priority();
             }
             else

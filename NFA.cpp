@@ -12,7 +12,7 @@
 #include <algorithm>
 
 using namespace std;
-void NFA::printNFA() {
+void NFA::printNFA() const {
     cout << "NFA" << endl;
     // print from start state
     cout << "Start State: " << start_state->get_id() << endl;
@@ -40,7 +40,7 @@ void NFA::printNFA(NFA_State* state, set<NFA_State*>& visited) {
     }
     if(state->isFinalState()){
         counter++;
-        cout << "state id: "<< state->get_id()<< "  token: " << state->get_token() << endl<< counter<<endl;
+        cout << "state id: "<< state->get_id()<< "  token: " << state->get_token()<< " is final?: "<<state->isFinalState() << endl<< counter<<endl;
 
     }
     // Mark the state as visited
@@ -198,8 +198,8 @@ NFA::NFA() = default;
 
 
 void NFA::OneOrMore() {
-    NFA_State* newStart = new NFA_State(false);
-    NFA_State* newEnd = new NFA_State(false);
+    auto* newStart = new NFA_State(false);
+    auto* newEnd = new NFA_State(false);
     this -> accept_state -> setFinalState(false);
     this -> accept_state -> addTransition(EPSILON, newEnd);
     newEnd -> set_priority(this -> accept_state -> get_priority());

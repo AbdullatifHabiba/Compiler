@@ -28,7 +28,7 @@ int main() {
     DFA D = *new DFA();
     set<DFA_State*> DFA_ = D.Converter(final->start_state);
     cout << "\nDFA # States = " << DFA_.size() <<endl<<endl;
-    D.printDFA(DFA_);
+    DFA::printDFA(DFA_);
     cout <<"start matching"<<endl;
     // match the input file with the DFA
     Matcher matcher;

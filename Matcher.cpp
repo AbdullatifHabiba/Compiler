@@ -14,11 +14,11 @@ Matcher::~Matcher() = default;
 
 void Matcher::matchFileWithDFA(const std::string& file_name, DFA_State* start) {
     // Read and tokenize the file
-    std::string str = "", line;
+    std::string str, line;
     std::ifstream myfile(file_name.c_str());
     if (myfile.is_open()) {
         while (getline(myfile, line)) {
-            str = str + ' ' + line;
+            str.append( ' ' + line);
         }
         myfile.close();
     } else{
@@ -48,7 +48,7 @@ void Matcher::setOutputFileName(string outputFile) {
     this->output_file_name = std::move(outputFile);
 }
 
-void Matcher::writeOutputToFile(std::string name) {
+void Matcher::writeOutputToFile(const std::string& name) {
     std::ofstream myfile(name.c_str());
     if (myfile.is_open()) {
         myfile << out;
@@ -69,7 +69,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
     for (int i = 0; i < str.size(); i++) {
         temp = temp->get_next(str[i]);
-        cout<<str[i]<<" "<<temp->get_token()<<" " <<temp->isFinalState()<<"  state_number "<<  temp->get_id() <<endl;
+//        cout<<str[i]<<" "<<temp->get_token()<<" " <<temp->isFinalState()<<"  state_number "<<  temp->get_id() <<endl;
         if (temp == nullptr) {
             break;
         } else if (temp->isFinalState()) {
@@ -83,8 +83,8 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
         // Token is accepted
         std::string type = temp->get_token();
-
-        if (type == "Keyword" || type == "Punctuation") {
+        cout << "type: " << type<< " state  "<<temp->get_id() << endl;
+        if (type == "keyword" || type == "punctuation") {
             this->out = this->out + str + '\n';
         } else {
             this->out = this->out + type + '\n';
@@ -99,7 +99,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
         if (last != nullptr && last->isFinalState()) {
             // Token with acceptance, process the accepted part
             std::string type = last->get_token();
-            if (type == "Keyword" || type == "Punctuation") {
+            if (type == "keyword" || type == "punctuation") {
                 this->out = this->out + str.substr(0, pos + 1) + '\n';
             } else {
                 this->out = this->out + type + '\n';
