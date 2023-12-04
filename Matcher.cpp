@@ -84,7 +84,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
         // Token is accepted
         std::string type = temp->get_token();
 
-        if (type == "Keyword" || type == "Punctuation") {
+        if (type == "keyword" || type == "punctuation") {
             this->out = this->out + str + '\n';
         } else {
             this->out = this->out + type + '\n';
@@ -99,7 +99,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
         if (last != nullptr && last->isFinalState()) {
             // Token with acceptance, process the accepted part
             std::string type = last->get_token();
-            if (type == "Keyword" || type == "Punctuation") {
+            if (type == "keyword" || type == "punctuation") {
                 this->out = this->out + str.substr(0, pos + 1) + '\n';
             } else {
                 this->out = this->out + type + '\n';
