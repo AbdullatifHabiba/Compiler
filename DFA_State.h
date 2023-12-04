@@ -1,39 +1,42 @@
-//
-// Created by abdu on 11/25/23.
-//
+#ifndef D_STATE_H
+#define D_STATE_H
+#include"NFA_State.h"
 
-#ifndef COMPILERS_DFA_STATE_H
-#define COMPILERS_DFA_STATE_H
-
-
+#include <string>
+#include <vector>
+#include <map>
 #include <set>
-#include "NFA_State.h"
 
-class DFA_State {
-private:
-    static int increase_id;
-    set<NFA_State *> content;
-    int priority;
-    bool isFinal;
-    string token;
-    int id;
+using namespace std;
+
+class DFA_State
+{
 public:
-    ~DFA_State();
     DFA_State();
+    DFA_State(bool is_accepted);
+    virtual ~DFA_State();
 
-
-    map<char, DFA_State*> transactions;
-
+    void set_content(set<NFA_State*> content);
     int get_id();
-    set<NFA_State *> get_content();
     string get_token();
     bool isFinalState();
-    DFA_State *get_next(char input);
-    void set_content(set<NFA_State *> Content);
+    DFA_State* get_next(char input);
+    set<NFA_State*> get_content();
     void addTransition(char ch, DFA_State *state);
-    map<char, DFA_State *> getTransitions();
-
     void set_priority(bool flag, NFA_State *temp);
+    /*need it as public*/
+    std::map<char,DFA_State*> transactions;
+    map<char, DFA_State *> getTransitions() ;
+
+private:
+
+    int id;
+    string token;
+    set<NFA_State*> content;
+    bool isFinal;
+    int priority;
+    static int increase_id;
+    static int min_increase_id;
 };
 
-#endif //COMPILERS_DFA_STATE_H
+#endif

@@ -67,7 +67,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
     }
 
     for (int i = 0; i < str.size(); i++) {
-        temp = temp->get_next();
+        temp = temp->get_next(str[i]);
         cout<<str[i]<<" "<<temp->get_token()<<" " <<temp->isFinalState()<<"  state_number "<<  temp->get_id() <<endl;
         if (temp == nullptr) {
             break;
