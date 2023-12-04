@@ -13,8 +13,8 @@ class DFA_State {
 private:
     static int increase_id;
     set<NFA_State *> content;
-    int priority;
-    bool isFinal;
+    int priority{};
+    bool isFinal{};
     string token;
     int id;
 public:
@@ -24,14 +24,14 @@ public:
 
     map<char, DFA_State*> transactions;
 
-    int get_id();
+    int get_id() const;
     set<NFA_State *> get_content();
     string get_token();
-    bool isFinalState();
+    bool isFinalState() const;
     DFA_State *get_next(char input);
-    void set_content(set<NFA_State *> Content);
+    void set_content(const set<NFA_State *>& Content);
     void addTransition(char ch, DFA_State *state);
-    map<char, DFA_State *> getTransitions();
+    map<char, DFA_State *> getTransitions() const;
 
     void set_priority(bool flag, NFA_State *temp);
 };

@@ -32,6 +32,7 @@ void Matcher::matchFileWithDFA(const std::string& file_name, DFA_State* start) {
 
     // Process each token using the runDFA method
     for (const auto& token : tokens) {
+        cout << "token : " << token << endl;
         runDFA(token, start);
     }
 
@@ -67,7 +68,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
     }
 
     for (int i = 0; i < str.size(); i++) {
-        temp = temp->get_next();
+        temp = temp->get_next(str[i]);
         cout<<str[i]<<" "<<temp->get_token()<<" " <<temp->isFinalState()<<"  state_number "<<  temp->get_id() <<endl;
         if (temp == nullptr) {
             break;
