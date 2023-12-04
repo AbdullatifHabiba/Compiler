@@ -23,6 +23,7 @@ public:
     DFA_State* get_next(char input);
     set<NFA_State*> get_content();
     void addTransition(char ch, DFA_State *state);
+
     void set_priority(bool flag, NFA_State *temp);
     /*need it as public*/
     std::map<char,DFA_State*> transactions;

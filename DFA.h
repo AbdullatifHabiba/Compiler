@@ -27,6 +27,7 @@ private:
     set<NFA_State*> move(set<NFA_State*> T, char input);
     set<char> get_alpha(NFA_State*);
 
+
 };
 
 #endif

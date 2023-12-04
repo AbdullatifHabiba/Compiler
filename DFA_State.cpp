@@ -12,6 +12,7 @@ DFA_State::DFA_State()
 DFA_State:: DFA_State(bool isFinal)
 {
     this -> id = min_increase_id++;
+
 }
 
 DFA_State::~DFA_State() {}

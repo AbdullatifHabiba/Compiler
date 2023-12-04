@@ -2,9 +2,10 @@
 #include <bits/stdc++.h>
 #include "DFA_State.h"
 
-DFA::DFA() {}
 
-DFA::~DFA() {}
+DFA::DFA() = default;
+
+DFA::~DFA() = default;
 
 set<NFA_State*> returned;
 
@@ -14,7 +15,7 @@ void DFA::e_closure(NFA_State *s)
     // Convert the vector to a set
     std::set<NFA_State*> v(transitionsVector.begin(), transitionsVector.end());
     returned.insert(s);
-    if(v.size() == 0)
+    if(v.empty())
     {
         return;
     }
@@ -26,25 +27,28 @@ void DFA::e_closure(NFA_State *s)
 }
 
 set<NFA_State*> DFA::e_closure(set<NFA_State*> T)
+
 {
     set<NFA_State*> returned_set;
-    for (set<NFA_State*>::iterator i = T.begin(); i != T.end(); i++)
+    for (auto state : T)
     {
         returned.clear();
         NFA_State *NFA_State = *i;
         e_closure(NFA_State);
         auto f = returned;
         returned_set.insert(f.begin(), f.end());
+
     }
     return returned_set;
 }
 
 set<NFA_State*> DFA::move(set<NFA_State*> T, char input)
+
+
 {
     set<NFA_State*> returned_set;
-    for (set<NFA_State*>::iterator i = T.begin(); i != T.end(); i++)
+    for (auto state : T)
     {
-        NFA_State *state = *i;
         std::vector<NFA_State*> transitionsVector = state->getTransitions()[input];
         // Convert the vector to a set
         std::set<NFA_State*> s1(transitionsVector.begin(), transitionsVector.end());
@@ -70,8 +74,10 @@ set<DFA_State*> DFA::Converter(NFA_State* start)
         DFA_State *temp = unmarked.front();
         unmarked.pop();
         for (std::set<char>::iterator it=alpha.begin(); it!=alpha.end(); ++it)
+
         {
-            set<NFA_State*> destination = move(temp->get_content(),*it);
+            cout << "state " << temp->get_id() << "  it " << it << endl;
+            set<NFA_State*> destination = move(temp->get_content(),it);
             bool flag = false;
             DFA_State* test ;
             for (std::set<DFA_State*>::iterator itr =DFA.begin(); itr != DFA.end(); ++itr)
@@ -92,10 +98,12 @@ set<DFA_State*> DFA::Converter(NFA_State* start)
                 DFA.insert(dest);
                 unmarked.push(dest);
                 temp->addTransition(*it,dest);
+
             }
             else
             {
-                temp->addTransition(*it,test);
+
+                temp->addTransition(it,test);
             }
         }
     }
@@ -114,10 +122,10 @@ set<char> DFA::get_alpha(NFA_State* s)
         NFA_State *x = current.front();
         current.pop();
         auto transitions = x->getTransitions();
-        for (auto it = transitions.begin(); it != transitions.end(); ++it) {
-            alpha.insert(it->first);
+        for (auto & transition : transitions) {
+            alpha.insert(transition.first);
 
-            for (NFA_State * n : it->second)
+            for (NFA_State * n : transition.second)
             {
                 if (n != nullptr && visited.find(n) == visited.end())
                 {
@@ -133,22 +141,22 @@ set<char> DFA::get_alpha(NFA_State* s)
     return alpha;
 }
 
-void DFA::printDFA(set<DFA_State*> Dfa)
+void DFA::printDFA(const set<DFA_State*>& Dfa)
 {
     for (auto Trans : Dfa) {
         typedef map<char, DFA_State* > :: const_iterator MapIterator;
         cout<< "state " << Trans->get_id() << " Final ? "<<Trans->isFinalState()<<"  ";
         cout<< "Token: "<< Trans->get_token();
         cout<<endl;
-        for (MapIterator iter = Trans->transactions.begin(); iter != Trans->transactions.end(); iter++)
-        {
-            cout  << "    --->> " << iter->first << "  >>--- "<< iter->second->get_id() <<endl;
-        }
+//        for (auto & transaction : Trans->transactions)
+//        {
+//            cout  << "    --->> " << transaction.first << "  >>--- "<< transaction.second->get_id() <<endl;
+//        }
     }
 
 }
 
-void DFA::printDFA_data(set<DFA_State*> Dfa)
+void DFA::printDFA_data(const set<DFA_State*>& Dfa)
 {
     for (auto Trans : Dfa) {
         typedef map<char, DFA_State *>::const_iterator MapIterator;

@@ -18,7 +18,7 @@ class NFA {
 
 public:
     NFA* buildNFA(vector<string> vector1);
-    void printNFA();
+    void printNFA() const;
     NFA();
     ~NFA();
     // define EPSILON
@@ -27,8 +27,8 @@ public:
     const string ZERO_OR_MORE ="*"; // Zero or more symbol
     const string ONE_OR_MORE = "+"; // One or more symbol
     vector<NFA_State*> states;
-    NFA_State *start_state;
-    NFA_State *accept_state;
+    NFA_State *start_state{};
+    NFA_State *accept_state{};
 
     void extend(char c);
     void join(NFA *pNfa);
@@ -41,7 +41,7 @@ public:
 
 private:
 
-    NFA *handleCharacter(vector<string> &expression, int &i);
+    static NFA *handleCharacter(vector<string> &expression, int &i);
 
     static NFA *handleRange(vector<string> &expression, int &i);
 

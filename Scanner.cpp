@@ -2,14 +2,14 @@
 #include "NFA.h"
 #include <iostream>
 #include <fstream>
-#include <cstring>
+#include <utility>
 #include <bits/stdc++.h>
 
 using namespace std;
 vector<char *> words;
 
 NFA* Scanner::scan(string pFile) {
-    this->file = pFile;
+    this->file = std::move(pFile);
     return getWords();
 }
 
@@ -90,7 +90,7 @@ NFA *Scanner::getWords() {
 
 
 void Scanner::parseKeyword(string &input) {
-    NFA *currentKeyword = nullptr;
+    NFA *currentKeyword ;
 
     for (int i = 1; i < (int) input.size(); ++i) {
         if (input[i] == ' ' or input[i] == '}') continue;
@@ -106,8 +106,9 @@ void Scanner::parseKeyword(string &input) {
         currentKeyword->accept_state->set_priority(0);
         currentKeyword->start_state->addTransition(token[0], currentKeyword->accept_state);
 
-        for (int i = 1; i < (int) token.size(); ++i)
-            currentKeyword->extend(token[i]);
+        for (int ind = 1; ind < (int) token.size(); ++ind)
+            currentKeyword->extend(token[ind]);
+
 
 
         if (keywords == nullptr) keywords = currentKeyword;
@@ -116,7 +117,7 @@ void Scanner::parseKeyword(string &input) {
 }
 
 void Scanner::parsePunctuation(string &input) {
-    NFA *currentPunctuation = nullptr;
+    NFA *currentPunctuation ;
 
     for (int i = 1; i < (int) input.size(); ++i) {
         if (input[i] == ' ' or input[i] == ']') continue;
@@ -244,7 +245,7 @@ vector<string> Scanner::generatePostfix(vector<string> &tokens) {
                     s.pop();
                 } else break;
             }
-            s.push(" ");
+            s.emplace(" ");
         }
         if (tokens[i] == "(" or tokens[i] == "-")
             s.push(tokens[i]);

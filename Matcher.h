@@ -22,7 +22,7 @@ public:
     ~Matcher();
     void matchFileWithDFA(const string& file_name, DFA_State* start);
     void setOutputFileName(string outputFileName);
-    void writeOutputToFile(string name);
+    void writeOutputToFile(const string& name);
     bool runDFA(string str, DFA_State* start);
     vector<string> getTransitionTable();
 };

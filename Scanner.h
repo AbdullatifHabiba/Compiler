@@ -35,7 +35,7 @@ private:
 
     vector<string> getTokens(string &input);
 
-    vector<string> generatePostfix(vector<string> &tokens);
+    static vector<string> generatePostfix(vector<string> &tokens);
 
     void parseDefinition(string &input, int &i);
 };
