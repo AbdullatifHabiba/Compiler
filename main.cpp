@@ -9,8 +9,8 @@ int main() {
     // intilize  scanner
     Scanner scanner;
 
-    string file_name ="C:\\Users\\mahmo\\CLionProjects\\Compiler\\input.txt";
-    string test_file_name ="C:\\Users\\mahmo\\CLionProjects\\Compiler\\test.txt";
+    string file_name ="C:\\Users\\Hardware\\Desktop\\TODO\\Compiler1\\input.txt";
+    string test_file_name ="C:\\Users\\Hardware\\Desktop\\TODO\\Compiler1\\test.txt";
 
     scanner.scan(file_name);
     NFA* final= scanner.getFinalNFA();
@@ -36,7 +36,7 @@ int main() {
     cout <<"start matching"<<endl;
     // match the input file with the DFA
     Matcher matcher;
-    matcher.matchFileWithDFA(test_file_name, *MDFA_.begin());
+    matcher.matchFileWithDFA(test_file_name, *DFA_.begin());
     cout<< "------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>Start state "<<DFA_.begin().operator*()->get_id()<<endl;
     matcher.writeOutputToFile("output.txt");
     matcher.getTransitionTable();

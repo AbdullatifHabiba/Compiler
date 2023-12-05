@@ -6,13 +6,12 @@
 #include "NFA.h"
 #include "NFA_State.h"
 #include <iostream>
-#include <regex>
 #include <set>
 #include <cassert>
 #include <algorithm>
 
 using namespace std;
-void NFA::printNFA() {
+void NFA::printNFA() const {
     cout << "NFA" << endl;
     // print from start state
     cout << "Start State: " << start_state->get_id() << endl;
@@ -191,15 +190,9 @@ NFA::~NFA() = default;
 
 NFA::NFA() = default;
 
-
-
-
-
-
-
 void NFA::OneOrMore() {
-    NFA_State* newStart = new NFA_State(false);
-    NFA_State* newEnd = new NFA_State(false);
+    auto* newStart = new NFA_State(false);
+    auto* newEnd = new NFA_State(false);
     this -> accept_state -> setFinalState(false);
     this -> accept_state -> addTransition(EPSILON, newEnd);
     newEnd -> set_priority(this -> accept_state -> get_priority());

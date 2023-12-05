@@ -133,6 +133,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
     bool flag = false;
     //push empty states to new_st with number of all groups in the DFA
     vector < DFA_State* > new_st ;
+    cout<< " Size ???----------------->>>>>>>>>>"<<grouping[0].size()<<endl;
     for (int i = 0 ; i < (int) grouping[0].size() ; i++)
     {
         DFA_State* st = new DFA_State();
@@ -148,9 +149,9 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
             if( (*it) -> get_id() == 0) //start state
             {
                 start_index = i;
-                new_st[0] -> set_content((*it) -> get_content());
-//                new_st[0]-> set_final((*it) -> isFinalState());
-//                new_st[0]-> set_token((*it) -> get_token());
+                ///new_st[0] -> set_content((*it) -> get_content());
+                new_st[0]-> set_final((*it) -> isFinalState());
+                new_st[0]-> set_token((*it) -> get_token());
                 typedef map<char, DFA_State* > :: const_iterator MapIterator;
                 for (MapIterator x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
                 {   //get next state
@@ -198,9 +199,11 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
         if (start_index < i ) {ind = i;}
         else {ind = i+1;}
 
-        new_st[ind] -> set_content((*it) -> get_content());
-//        new_st[ind] -> set_final((*it) -> isFinalState());
-//        new_st[ind] -> set_token((*it) -> get_token());
+//        new_st[ind] -> set_content((*it) -> get_content());
+        cout<< " Tell me why :::::::::::::::::::::::::::::::         "<<i<<endl;
+        cout<< " Tell me Token :::::::::::::::::::::::::::::::         "<<(*it) -> get_token()<<endl;
+        new_st[ind] -> set_final((*it) -> isFinalState());
+        new_st[ind] -> set_token((*it) -> get_token());
         typedef map<char, DFA_State* > :: const_iterator MapIterator;
         for (MapIterator x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
         {
@@ -230,7 +233,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
 
     for (int i = 0 ; i < (int) grouping[0].size() ; i++)
     {
-        cout << "here ---> " << i << "content";
+        cout << "here ---> " << i << " content ";
         for (set<DFA_State*>::iterator it = grouping[0][i].begin(); it != grouping[0][i].end(); it++)
         {
             cout << (*it) -> get_id() << ' ';
