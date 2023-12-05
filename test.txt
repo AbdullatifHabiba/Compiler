@@ -1,6 +1,5 @@
-int sum , count , pass , mnt; while (pass !=
-10)
-{
-pass = pass + 1 ;
-pass = pass * 5;
+int i, mun, hi ;
+while(mum == hi){
+if(i == 0)
+float j;
 }

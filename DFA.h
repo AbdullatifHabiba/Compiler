@@ -17,15 +17,15 @@ public:
     DFA();
     virtual ~DFA();
     set<DFA_State*> Converter(NFA_State*);
-    void printDFA(set<DFA_State *> Dfa);
-    void printDFA_data(set<DFA_State *> Dfa);
+    static void printDFA(const set<DFA_State *>& Dfa);
+    static void printDFA_data(const set<DFA_State *>& Dfa);
 
 private:
 
     void e_closure(NFA_State *s);
-    set<NFA_State*> e_closure(set<NFA_State*> T);
-    set<NFA_State*> move(set<NFA_State*> T, char input);
-    set<char> get_alpha(NFA_State*);
+    set<NFA_State*> e_closure(const set<NFA_State*>& T);
+    set<NFA_State*> move(const set<NFA_State*>& T, char input);
+    static set<char> get_alpha(NFA_State*);
 
 
 };

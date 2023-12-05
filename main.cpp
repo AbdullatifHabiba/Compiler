@@ -3,32 +3,36 @@
 #include "NFA.h"
 
 #include "DFA.h"
+#include "Minimize.h"
 #include "Matcher.h"
-
 int main() {
     // intilize  scanner
     Scanner scanner;
 
-    string file_name ="C:/Users/Hardware/Desktop/TODO/Compiler1/input.txt";
-    string test_file_name ="C:/Users/Hardware/Desktop/TODO/Compiler1/test.txt";
+    string file_name ="C:\\Users\\Hardware\\Desktop\\TODO\\Compiler1\\input.txt";
+    string test_file_name ="C:\\Users\\Hardware\\Desktop\\TODO\\Compiler1\\test.txt";
 
     scanner.scan(file_name);
     NFA* final= scanner.getFinalNFA();
 
-    final->printNFA();
+//    final->printNFA();
 
    for(const auto &identifier : scanner.identifiers) {
        cout << identifier.first << " : " << identifier.second << endl;
     }
     set<NFA_State*> visited;
-    final-> printNFA(final->start_state, visited);
+//    final-> printNFA(final->start_state, visited);
 
 //  DFA States Test
 
     DFA D = *new DFA();
     set<DFA_State*> DFA_ = D.Converter(final->start_state);
     cout << "\nDFA # States = " << DFA_.size() <<endl<<endl;
-
+    Minimize MD = *new Minimize();
+    set<DFA_State*> MDFA_ = MD.DFA_min(DFA_);
+    cout<<"the size :::   ---->" <<MDFA_.size()<<endl;
+    //D.printDFA(DFA_);
+//    D.printDFA(MDFA_);
     cout <<"start matching"<<endl;
     // match the input file with the DFA
     Matcher matcher;

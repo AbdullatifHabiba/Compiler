@@ -119,5 +119,3 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
     return false;
 }
-
-

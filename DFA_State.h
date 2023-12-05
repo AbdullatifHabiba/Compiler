@@ -13,13 +13,13 @@ class DFA_State
 {
 public:
     DFA_State();
-    DFA_State(bool is_accepted);
+    explicit DFA_State(bool is_accepted);
     virtual ~DFA_State();
 
-    void set_content(set<NFA_State*> content);
-    int get_id();
+    void set_content(const set<NFA_State*>& content1);
+    [[nodiscard]] int get_id() const;
     string get_token();
-    bool isFinalState();
+    [[nodiscard]] bool isFinalState() const;
     DFA_State* get_next(char input);
     set<NFA_State*> get_content();
     void addTransition(char ch, DFA_State *state);
@@ -29,15 +29,15 @@ public:
     void set_final(bool f);
     /*need it as public*/
     std::map<char,DFA_State*> transactions;
-    map<char, DFA_State *> getTransitions() ;
+    [[nodiscard]] map<char, DFA_State *> getTransitions() const ;
 
 private:
 
     int id;
     string token;
     set<NFA_State*> content;
-    bool isFinal;
-    int priority;
+    bool isFinal{};
+    int priority{};
     static int increase_id;
     static int min_increase_id;
 };
