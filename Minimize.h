@@ -14,7 +14,7 @@ class Minimize
 public:
     Minimize();
     virtual ~Minimize();
-    set<DFA_State*> DFA_min (set<DFA_State*> DFA);
+    static set<DFA_State*> DFA_min (const set<DFA_State*>& DFA);
 
 protected:
 

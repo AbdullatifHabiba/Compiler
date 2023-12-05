@@ -1,5 +1,11 @@
-int i, mun, hi ;
-while(mum == hi){
-if(i == 0)
-float j;
+int sum , count , pass , mnt; while (pass !=
+10)
+{
+pass = pass + 1 + 555 ;
+}
+{
+pass = pass + 1 + 555 ;
+}
+{
+pass >=  555 ;
 }

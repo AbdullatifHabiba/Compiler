@@ -8,10 +8,10 @@
 using namespace std;
 
 
-Minimize::Minimize(){}
-Minimize::~Minimize(){}
+Minimize::Minimize()= default;
+Minimize::~Minimize()= default;
 
-set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
+set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
 //    initialize some variables
     vector < set < DFA_State* > > grouping[2];
     //group[0][0]--> non acceptance, group[0][i]--> acceptance for different states
@@ -19,7 +19,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
     set < char > alpha;
     grouping[0].resize(1);
     queue < DFA_State* > q;
-    set<DFA_State*>::iterator start = DFA.begin();
+    auto start = DFA.begin();
     q.push(*start);
     set < DFA_State* > marked;
     marked.insert(*start);
@@ -37,7 +37,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
             bool flag = false;
             for (int i = 1 ; i < (int) grouping[0].size() ; i++)
             {
-                set<DFA_State*>::iterator it = grouping[0][i].begin();
+                auto it = grouping[0][i].begin();
                 if ( (*it) -> get_token() == temp -> get_token())
                 {
                     grouping[0][i].insert(temp);
@@ -59,10 +59,10 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
         }
         //if the next state is not marked before then mark it and push it to stack
         typedef map<char, DFA_State* > :: const_iterator MapIterator;
-        for (MapIterator it = temp -> transactions.begin(); it != temp -> transactions.end(); it++)
+        for (auto & transaction : temp -> transactions)
         {
-            alpha.insert(it -> first);
-            DFA_State* se = it->second;
+            alpha.insert(transaction.  first);
+            DFA_State* se = transaction.second;
             if (marked.find(se) == marked.end())
             {
                 marked.insert(se);
@@ -81,13 +81,13 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
         {
             map < vector < int >, set < DFA_State* > > current;
             // for each state in the group
-            for (set<DFA_State*>::iterator it = grouping[bit][i].begin(); it != grouping[bit][i].end(); it++)
+            for (auto it = grouping[bit][i].begin(); it != grouping[bit][i].end(); it++)
             {
                 vector < int > dest;
                 // for all alphabet in each state
-                for (set<char>::iterator itra = alpha.begin() ; itra != alpha.end() ; itra++)
+                for (char itra : alpha)
                 {
-                    DFA_State* d = (*it) -> get_next((*itra));
+                    DFA_State* d = (*it) -> get_next(itra);
                     if (d -> get_id() == -1) dest.push_back(-1); //dead state
                     else
                     {
@@ -114,9 +114,9 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
             }
 
             typedef  map < vector < int >, set < DFA_State* > > :: const_iterator MapIterator;
-            for (MapIterator e = current.begin(); e != current.end(); e++)
+            for (auto & e : current)
             {
-                grouping[bit ^ 1].push_back(e -> second);
+                grouping[bit ^ 1].push_back(e.  second);
             }
         }
 
@@ -133,10 +133,10 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
     bool flag = false;
     //push empty states to new_st with number of all groups in the DFA
     vector < DFA_State* > new_st ;
-    cout<< " Size ???----------------->>>>>>>>>>"<<grouping[0].size()<<endl;
+    cout<< " Size ?----------------->>>>>>>>>>"<<grouping[0].size()<<endl;
     for (int i = 0 ; i < (int) grouping[0].size() ; i++)
     {
-        DFA_State* st = new DFA_State();
+        auto* st = new DFA_State();
         new_st.push_back(st);
     }
 
@@ -144,7 +144,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
     // for each group in the DFA
     for (int i = 0 ; i < (int) grouping[0].size() ; i++)
     {
-        for (set<DFA_State*>::iterator it = grouping[0][i].begin(); it != grouping[0][i].end(); it++)
+        for (auto it = grouping[0][i].begin(); it != grouping[0][i].end(); it++)
         {
             if( (*it) -> get_id() == 0) //start state
             {
@@ -153,7 +153,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
                 new_st[0]-> set_final((*it) -> isFinalState());
                 new_st[0]-> set_token((*it) -> get_token());
                 typedef map<char, DFA_State* > :: const_iterator MapIterator;
-                for (MapIterator x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
+                for (auto x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
                 {   //get next state
                     DFA_State* y = (*it) -> get_next(x -> first);
                     for (int k = 0 ; k < (int) grouping[0].size() ; k++)
@@ -194,7 +194,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
     for (int i = 0 ; i < (int) grouping[0].size() ; i++)
     {
         if (i == start_index)continue;
-        set<DFA_State*>::iterator it = grouping[0][i].begin();
+        auto it = grouping[0][i].begin();
         int ind;
         if (start_index < i ) {ind = i;}
         else {ind = i+1;}
@@ -205,7 +205,7 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
         new_st[ind] -> set_final((*it) -> isFinalState());
         new_st[ind] -> set_token((*it) -> get_token());
         typedef map<char, DFA_State* > :: const_iterator MapIterator;
-        for (MapIterator x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
+        for (auto x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
         {
             DFA_State* y = (*it) -> get_next(x -> first);
 
@@ -234,16 +234,16 @@ set<DFA_State*> Minimize:: DFA_min (set<DFA_State*> DFA){
     for (int i = 0 ; i < (int) grouping[0].size() ; i++)
     {
         cout << "here ---> " << i << " content ";
-        for (set<DFA_State*>::iterator it = grouping[0][i].begin(); it != grouping[0][i].end(); it++)
+        for (auto it : grouping[0][i])
         {
-            cout << (*it) -> get_id() << ' ';
+            cout << it -> get_id() << ' ';
         }
         cout << endl;
     }
 
-    for (int i = 0 ; i < (int) new_st.size() ; i++)
+    for (auto i : new_st)
     {
-        result.insert(new_st[i]);
+        result.insert(i);
     }
 
     return result;
