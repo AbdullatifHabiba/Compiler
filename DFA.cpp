@@ -2,7 +2,6 @@
 #include <bits/stdc++.h>
 #include "DFA_State.h"
 
-
 DFA::DFA() = default;
 
 DFA::~DFA() = default;
@@ -19,32 +18,26 @@ void DFA::e_closure(NFA_State *s)
     {
         return;
     }
-    for (set<NFA_State*>::iterator i = v.begin(); i != v.end(); i++)
+    for (auto state : v)
     {
-        NFA_State *state  = *i;
         e_closure(state);
     }
 }
 
-set<NFA_State*> DFA::e_closure(set<NFA_State*> T)
-
+set<NFA_State*> DFA::e_closure(const set<NFA_State*>& T)
 {
     set<NFA_State*> returned_set;
-    for (auto state : T)
+    for (auto NFA_State : T)
     {
         returned.clear();
-        NFA_State *NFA_State = *i;
         e_closure(NFA_State);
         auto f = returned;
         returned_set.insert(f.begin(), f.end());
-
     }
     return returned_set;
 }
 
-set<NFA_State*> DFA::move(set<NFA_State*> T, char input)
-
-
+set<NFA_State*> DFA::move(const set<NFA_State*>& T, char input)
 {
     set<NFA_State*> returned_set;
     for (auto state : T)
@@ -64,7 +57,7 @@ set<DFA_State*> DFA::Converter(NFA_State* start)
     set<DFA_State*> DFA;
     returned.clear();
     e_closure(start);
-    DFA_State *s = new DFA_State();
+    auto *s = new DFA_State();
     s->set_content(returned);
     DFA.insert(s);
     unmarked.push(s);
@@ -73,16 +66,13 @@ set<DFA_State*> DFA::Converter(NFA_State* start)
     {
         DFA_State *temp = unmarked.front();
         unmarked.pop();
-        for (std::set<char>::iterator it=alpha.begin(); it!=alpha.end(); ++it)
-
+        for (char it : alpha)
         {
-            cout << "state " << temp->get_id() << "  it " << it << endl;
             set<NFA_State*> destination = move(temp->get_content(),it);
             bool flag = false;
             DFA_State* test ;
-            for (std::set<DFA_State*>::iterator itr =DFA.begin(); itr != DFA.end(); ++itr)
+            for (auto d : DFA)
             {
-                DFA_State* d = *itr;
                 if(d->get_content() == destination)
                 {
                     flag = true;
@@ -93,16 +83,14 @@ set<DFA_State*> DFA::Converter(NFA_State* start)
 
             if (!flag )
             {
-                DFA_State *dest = new DFA_State();
+                auto *dest = new DFA_State();
                 dest->set_content(destination);
                 DFA.insert(dest);
                 unmarked.push(dest);
-                temp->addTransition(*it,dest);
-
+                temp->addTransition(it,dest);
             }
             else
             {
-
                 temp->addTransition(it,test);
             }
         }
@@ -148,10 +136,10 @@ void DFA::printDFA(const set<DFA_State*>& Dfa)
         cout<< "state " << Trans->get_id() << " Final ? "<<Trans->isFinalState()<<"  ";
         cout<< "Token: "<< Trans->get_token();
         cout<<endl;
-//        for (auto & transaction : Trans->transactions)
-//        {
-//            cout  << "    --->> " << transaction.first << "  >>--- "<< transaction.second->get_id() <<endl;
-//        }
+        for (auto & transaction : Trans->transactions)
+        {
+            cout  << "    --->> " << transaction.first << "  >>--- "<< transaction.second->get_id() <<endl;
+        }
     }
 
 }

@@ -1,7 +1,9 @@
 #include "DFA_State.h"
 #include<bits/stdc++.h>
 
-int DFA_State::increase_id = 1;
+#include <utility>
+
+int DFA_State::increase_id = 0;
 int DFA_State::min_increase_id = 0;
 
 DFA_State::DFA_State()
@@ -12,12 +14,11 @@ DFA_State::DFA_State()
 DFA_State:: DFA_State(bool isFinal)
 {
     this -> id = min_increase_id++;
-
 }
 
-DFA_State::~DFA_State() {}
+DFA_State::~DFA_State() = default;
 
-int DFA_State::get_id()
+int DFA_State::get_id() const
 {
     return this -> id;
 }
@@ -25,7 +26,7 @@ string DFA_State::get_token()
 {
     return this -> token;
 }
-bool DFA_State::isFinalState()
+bool DFA_State::isFinalState() const
 {
     return this -> isFinal;
 }
@@ -34,7 +35,7 @@ DFA_State* DFA_State::get_next(char input)
 {
     if (this -> transactions.find(input) == this -> transactions.end())
     {
-        DFA_State* d = new DFA_State();
+        auto* d = new DFA_State();
         return d;
     }
     else return this -> transactions.find(input)->second;
@@ -49,19 +50,18 @@ void DFA_State::addTransition(char ch, DFA_State *state)
     this -> transactions.insert(std::pair<char, DFA_State*>(ch, state));
 }
 
-void DFA_State::set_content(set<NFA_State *> content) {
-    this->content = content;
+void DFA_State::set_content(const set<NFA_State *>& content1) {
+    this->content = content1;
     bool flag = false;
-    for (set<NFA_State*>::iterator i = this->content.begin(); i != this->content.end(); i++)
+    for (auto temp : this->content)
     {
-        NFA_State *temp = *i;
         if(temp->isFinalState())
         {
             set_priority(flag, temp);
             flag = true;
         }
     }
-    if (content.size() == 0)
+    if (content.empty())
     {
         this->token =  "Dead State";
     }
@@ -85,6 +85,14 @@ void DFA_State::set_priority(bool flag, NFA_State *temp) {
     }
 }
 
-map<char, DFA_State *> DFA_State::getTransitions() {
+map<char, DFA_State *> DFA_State::getTransitions() const {
     return this->transactions;
+}
+
+void DFA_State::set_token(string s) {
+    this->token = std::move(s);
+}
+
+void DFA_State::set_final(bool f) {
+    this->isFinal = f;
 }

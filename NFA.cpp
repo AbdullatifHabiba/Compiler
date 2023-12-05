@@ -6,7 +6,6 @@
 #include "NFA.h"
 #include "NFA_State.h"
 #include <iostream>
-#include <regex>
 #include <set>
 #include <cassert>
 #include <algorithm>
@@ -190,12 +189,6 @@ NFA* NFA::buildNFA(vector<string> expression) {
 NFA::~NFA() = default;
 
 NFA::NFA() = default;
-
-
-
-
-
-
 
 void NFA::OneOrMore() {
     auto* newStart = new NFA_State(false);

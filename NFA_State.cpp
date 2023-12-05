@@ -24,8 +24,8 @@ NFA_State::NFA_State(bool isFinal) {
     this->id=increase_id++;
 }
 
-void NFA_State::setFinalState(bool final) {
-    this->isFinal = final;
+void NFA_State::setFinalState(bool isFinal_) {
+    this->isFinal = isFinal_;
 }
 
 NFA_State::~NFA_State() = default;
