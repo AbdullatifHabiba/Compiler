@@ -14,6 +14,9 @@ class DFA_State
 public:
     DFA_State();
     explicit DFA_State(bool is_accepted);
+
+    DFA_State(int id);
+
     virtual ~DFA_State();
 
     void set_content(const set<NFA_State*>& content1);
@@ -27,13 +30,15 @@ public:
     void set_priority(bool flag, NFA_State *temp);
     void set_token(string s);
     void set_final(bool f);
+    void set_priority(int id);
+    int get_priority() const;
     /*need it as public*/
     std::map<char,DFA_State*> transactions;
     [[nodiscard]] map<char, DFA_State *> getTransitions() const ;
 
 private:
 
-    int id;
+    int id{};
     string token;
     set<NFA_State*> content;
     bool isFinal{};

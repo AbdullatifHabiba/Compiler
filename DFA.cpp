@@ -143,6 +143,58 @@ void DFA::printDFA(const set<DFA_State*>& Dfa)
     }
 
 }
+void DFA::printTransitionTable(const set<DFA_State*>& Dfa)
+{
+    // print the transition table of the DFA row by row by iterating over the DFA set and print state id and its transitions and extract trs.txt file
+    // declare the output file
+    ofstream out("trs.txt");
+
+    cout << "DFA Transition Table" << endl;
+    cout << "-------------------" << endl;
+
+    cout << endl;
+    // print the header of the rows
+    cout << "S\t    ";
+    out << "S\t    ";
+    // get all the alphabet of the DFA
+    set<char> alphabet;
+    for (auto state : Dfa)
+    {
+        for (auto trs: state->getTransitions())
+        {
+            alphabet.insert(trs.first);
+        }
+    }
+    for (auto ch : alphabet)
+    {
+        cout << ch << "\t";
+        out << ch << "\t";
+    }
+cout << endl;
+out << endl;
+
+
+
+    for(auto state : Dfa)
+    {
+        cout << state->get_id()<<"("<< state->get_token()<< ")\t";
+
+        out << state->get_id() <<"("<< state->get_token()<< ")\t";
+        for(auto trs: state->getTransitions())
+        {
+            cout << trs.second->get_id() << "\t";
+            out << trs.second->get_id() << "\t";
+        }
+        cout << endl;
+        out << endl;
+    }
+    out.close();
+
+
+
+
+
+}
 
 void DFA::printDFA_data(const set<DFA_State*>& Dfa)
 {
@@ -151,9 +203,9 @@ void DFA::printDFA_data(const set<DFA_State*>& Dfa)
         cout << "state " << Trans->get_id();//<< " Final ? "<<this->isFinalState()<<"  ";
         cout << "  --> Token: " << Trans->get_token();
         cout << endl;
-        for (auto *it: Trans->get_content()) {
-            cout << " , State " << it->get_id();
-        }
-        cout << endl;
+//        for (auto *it: Trans->get_content()) {
+//            cout << " , State " << it->get_id();
+//        }
+//        cout << endl;
     }
 }

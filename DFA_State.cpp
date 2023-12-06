@@ -6,10 +6,11 @@
 int DFA_State::increase_id = 0;
 int DFA_State::min_increase_id = 0;
 
-DFA_State::DFA_State()
+DFA_State::DFA_State(int id)
 {
-    this -> id = -1;
+    this -> id = id;
 }
+
 
 DFA_State:: DFA_State(bool isFinal)
 {
@@ -96,3 +97,15 @@ void DFA_State::set_token(string s) {
 void DFA_State::set_final(bool f) {
     this->isFinal = f;
 }
+
+int DFA_State::get_priority() const {
+    return this->priority;
+}
+
+void DFA_State::set_priority(int priority) {
+    this->priority = priority;
+
+}
+
+DFA_State::DFA_State() = default;
+

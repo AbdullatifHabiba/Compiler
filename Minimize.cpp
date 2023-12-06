@@ -17,7 +17,7 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
     //group[0][0]--> non acceptance, group[0][i]--> acceptance for different states
     set <DFA_State*> result;
     set < char > alpha;
-    grouping[0].resize(1);
+    grouping[0].resize(1);// resize the first group to be one
     queue < DFA_State* > q;
     auto start = DFA.begin();
     q.push(*start);
@@ -40,7 +40,7 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
                 auto it = grouping[0][i].begin();
                 if ( (*it) -> get_token() == temp -> get_token())
                 {
-                    grouping[0][i].insert(temp);
+                    grouping[0][i].insert(temp);//insert in the group
                     flag = true;
                     break;
                 }
@@ -72,8 +72,21 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         }
     }
 //Now we have the states each in its corresponding group
+// print the groups
+//cout << "group1 size " << grouping[0].size() << endl;
+//    for (int i = 0 ; i < (int) grouping[0].size() ; i++)
+//    {
+//        cout << "group " << i << "  ";
+//        for (auto it : grouping[0][i])
+//        {
+//            cout << it -> get_id() << ' '<< it->get_token() << ' ';
+//        }
+//        cout << endl;
+//    }
 
-// let's make the Minimization for each group
+
+
+
     int bit = 0;
     while (true)
     {
@@ -125,18 +138,42 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         bit ^= 1;
 
     }
+    // PRint the first row as alphabet
+//    cout << "t              ";
+//    for (auto it : alpha)
+//    {
+//        cout << it << "    ";
+//    }
+//    cout << endl;
+//   // print  one state of each groub  and their destinations
+//    for (int i = 0 ; i < (int) grouping[bit].size() ; i++)
+//    {
+//        DFA_State* temp = *(grouping[bit][i].begin());
+//        cout << temp -> get_id() << ' '<< temp->get_token() << "     ,";
+//        typedef map<char, DFA_State* > :: const_iterator MapIterator;
+//        for (auto & transaction : temp -> transactions)
+//        {
+//            cout  << transaction.second -> get_id() << "  , ";
+//        }
+//        cout << endl;
+//
+//
+//    }
 
-    //after partitioning into group now make new DFA with the new groups
+
+
+
+   //partitioning into group now make new DFA with the new groups
 
     /*finding starting state*/
     int start_index ;
     bool flag = false;
     //push empty states to new_st with number of all groups in the DFA
-    vector < DFA_State* > new_st ;
-    cout<< " Size ?----------------->>>>>>>>>>"<<grouping[0].size()<<endl;
-    for (int i = 0 ; i < (int) grouping[0].size() ; i++)
+    vector <DFA_State* > new_st ;
+    cout<< " Size ???----------------->>>>>>>>>>"<<grouping[bit].size()<<endl;
+    for (int i = 0 ; i < (int) grouping[bit].size() ; i++)
     {
-        auto* st = new DFA_State();
+        auto* st = new DFA_State(i);
         new_st.push_back(st);
     }
 
@@ -148,10 +185,11 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         {
             if( (*it) -> get_id() == 0) //start state
             {
+                cout<< "state "<<(*it) -> get_id()<<endl;
                 start_index = i;
-                ///new_st[0] -> set_content((*it) -> get_content());
                 new_st[0]-> set_final((*it) -> isFinalState());
                 new_st[0]-> set_token((*it) -> get_token());
+                new_st[0]->set_priority((*it) -> get_priority());
                 typedef map<char, DFA_State* > :: const_iterator MapIterator;
                 for (auto x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
                 {   //get next state
@@ -200,10 +238,11 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         else {ind = i+1;}
 
 //        new_st[ind] -> set_content((*it) -> get_content());
-        cout<< " Tell me why :::::::::::::::::::::::::::::::         "<<i<<endl;
-        cout<< " Tell me Token :::::::::::::::::::::::::::::::         "<<(*it) -> get_token()<<endl;
+//        cout<< " Tell me why :::::::::::::::::::::::::::::::         "<<i<<endl;
+//        cout<< " Tell me Token :::::::::::::::::::::::::::::::         "<<(*it) -> get_token()<<endl;
         new_st[ind] -> set_final((*it) -> isFinalState());
         new_st[ind] -> set_token((*it) -> get_token());
+        new_st[ind] -> set_priority((*it) -> get_priority());
         typedef map<char, DFA_State* > :: const_iterator MapIterator;
         for (auto x = (*it) -> transactions.begin(); x != (*it) -> transactions.end(); x++)
         {
@@ -231,20 +270,82 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         }
     }
 
-    for (int i = 0 ; i < (int) grouping[0].size() ; i++)
-    {
-        cout << "here ---> " << i << " content ";
-        for (auto it : grouping[0][i])
-        {
-            cout << it -> get_id() << ' ';
-        }
-        cout << endl;
-    }
+//    for (int i = 0 ; i < (int) grouping[0].size() ; i++)
+//    {
+//        cout << "here ---> " << i << " content ";
+//        for (auto it : grouping[0][i])
+//        {
+//            cout << it -> get_id() << ' ' << it -> get_token() << ' ';
+//        }
+//        cout << endl;
+//    }
 
     for (auto i : new_st)
     {
+        cout << i -> get_id() << ' ' << i -> get_token() << ' ';
+        cout<<endl;
+        // set the start state
+        if (i -> get_id() == 0)
+        {
+           this-> start_state = i;
+        }
         result.insert(i);
     }
 
     return result;
+}
+void Minimize::printTransitionTable(const set<DFA_State*>& Mfa)
+{
+    // declare the output file
+    ofstream out("trsM.txt");
+
+    cout << "MinDfa Transition Table" << endl;
+    cout << "-------------------" << endl;
+
+    cout << endl;
+    // print the header of the rows
+    cout << "S\t";
+    out << "S\t    ";
+    // get all the alphabet of the DFA
+    set<char> alphabet;
+    for (auto state : Mfa)
+    {
+        for (auto trs: state->getTransitions())
+        {
+            alphabet.insert(trs.first);
+        }
+    }
+    for (auto ch : alphabet)
+    {
+        cout << ch << "\t";
+        out << ch << "\t";
+    }
+    cout << endl;
+    out << endl;
+
+
+
+    for(auto state : Mfa)
+    {
+        cout << state->get_id()<<"("<< state->get_token()<< ")\t";
+
+        out << state->get_id() <<"("<< state->get_token()<< ")\t";
+        for(auto trs: state->getTransitions())
+        {
+            cout << trs.second->get_id() << "\t";
+            out << trs.second->get_id() << "\t";
+        }
+        cout << endl;
+        out << endl;
+    }
+    out.close();
+
+
+
+
+
+}
+
+DFA_State *Minimize::get_start_state() const {
+    return this->start_state;
 }

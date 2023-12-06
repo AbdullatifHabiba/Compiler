@@ -25,19 +25,18 @@ int main() {
 
 //  DFA States Test
 
-    DFA D = *new DFA();
-    set<DFA_State*> DFA_ = D.Converter(final->start_state);
+    DFA *D = new DFA();
+    set<DFA_State*> DFA_ = D->Converter(final->start_state);
     cout << "\nDFA # States = " << DFA_.size() <<endl<<endl;
-    Minimize MD = *new Minimize();
-//    set<DFA_State*> MDFA_ = MD.DFA_min(DFA_);
-//    cout<<"the size :::   ---->" <<MDFA_.size()<<endl;
-//    //D.printDFA(DFA_);
-////    D.printDFA(MDFA_);
+//    D->printTransitionTable(DFA_);
+    auto *MD = new Minimize();
+    set<DFA_State*> MDFA_ = MD->DFA_min(DFA_);
+    cout<<"the MDFA_ size :::   ---->" <<MDFA_.size()<<endl;
+    MD->printTransitionTable(MDFA_);
     cout <<"start matching"<<endl;
-    // match the input file with the DFA
+    cout<< "------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>Start state "<<MD->get_start_state()->get_id()<<endl;
     Matcher matcher;
-    matcher.matchFileWithDFA(test_file_name, *DFA_.begin());
-    cout<< "------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>Start state "<<DFA_.begin().operator*()->get_id()<<endl;
+    matcher.matchFileWithDFA(test_file_name, MD->get_start_state());
     matcher.writeOutputToFile("output.txt");
     // print the transition table
     for (const auto& row : matcher.getTransitionTable()) {
