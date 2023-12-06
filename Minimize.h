@@ -14,11 +14,14 @@ class Minimize
 public:
     Minimize();
     virtual ~Minimize();
-    static set<DFA_State*> DFA_min (const set<DFA_State*>& DFA);
+    set<DFA_State*> DFA_min (const set<DFA_State*>& DFA);
 
-protected:
+    static void printTransitionTable(const set<DFA_State *> &Dfa);
+    DFA_State *get_start_state() const;
 
 private:
+     DFA_State *start_state;
+
 };
 
 #endif //COMPILERS_MINIMIZE_H

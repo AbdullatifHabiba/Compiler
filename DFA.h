@@ -20,6 +20,8 @@ public:
     static void printDFA(const set<DFA_State *>& Dfa);
     static void printDFA_data(const set<DFA_State *>& Dfa);
 
+    void printTransitionTable(const set<DFA_State *> &Dfa);
+
 private:
 
     void e_closure(NFA_State *s);
