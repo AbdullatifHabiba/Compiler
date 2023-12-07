@@ -14,7 +14,7 @@
 class Matcher {
 private:
     string out;
-    vector<string> transitionTable;
+    vector<string> IdentifiersList;
     string output_file_name;
 
 public:
@@ -24,7 +24,7 @@ public:
     void setOutputFileName(string outputFileName);
     void writeOutputToFile(const string& name);
     bool runDFA(string str, DFA_State* start);
-    vector<string> getTransitionTable();
+    vector<string> getIdentifiersList();
 };
 
 

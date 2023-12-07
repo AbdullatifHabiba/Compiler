@@ -31,15 +31,15 @@ int main() {
 //    D->printMinGraph(DFA_);
     auto *MD = new Minimize();
     set<DFA_State*> MDFA_ = MD->minimize_dfa_states(DFA_);
-    cout<<"t\nMinDfa   # States =  " <<MDFA_.size()<<endl;
+    cout<<"MinDfa   # States =  " <<MDFA_.size()<<endl;
     MD->printMinGraph(MDFA_);
     cout <<"start matching"<<endl;
-    cout<< "------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>Start state "<<MD->get_start_state()->get_id()<<endl;
+    cout<< "-->>Start state "<<MD->get_start_state()->get_id()<<endl;
     Matcher matcher;
     matcher.setOutputFileName("output.txt");
     matcher.matchFileWithDFA(test_file_name, MD->get_start_state());
-    // print the transition table
-    for (const auto& row : matcher.getTransitionTable()) {
+    // print the IdentifiersList
+    for (const auto& row : matcher.getIdentifiersList()) {
         std::cout << row << std::endl;
     }
     return 0;

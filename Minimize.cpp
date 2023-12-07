@@ -123,7 +123,6 @@ set<DFA_State*> Minimize::buildMinimizedDFA(const vector<set<DFA_State*>>*groupi
     for (int i = 0; i < static_cast<int>(grouping[0].size()); i++) {
         for (auto it = grouping[0][i].begin(); it != grouping[0][i].end(); it++) {
             if ((*it)->get_id() == 0) {
-                cout << "state " << (*it)->get_id() << endl;
                 start_index = i;
                 new_st[0]->set_final((*it)->isFinalState());
                 new_st[0]->set_token((*it)->get_token());
@@ -181,8 +180,7 @@ set<DFA_State*> Minimize::buildMinimizedDFA(const vector<set<DFA_State*>>*groupi
     }
 
     for (auto i : new_st) {
-        cout << i->get_id() << ' ' << i->get_token() << ' ';
-        cout << endl;
+
         if (i->get_id() == 0) {
             this->start_state = i;
         }
@@ -248,7 +246,7 @@ void Minimize::printMinGraph(const set<DFA_State*>& Mfa)
 {
     // declare the output file
     ofstream out("graph.dot");
-    cout<<"the graph of the DFA is "<<Mfa.size()<<endl;
+    cout<<"build graph of the Min DFA  "<<endl;
     out << "digraph finite_state_machine {\n";
     out << "rankdir=LR;\n";
     //out << "size=\"30,30\"\n";
