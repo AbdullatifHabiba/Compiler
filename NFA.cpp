@@ -1,6 +1,4 @@
-//
-// Created by abdu on 11/25/23.
-//
+
 
 #include <stack>
 #include "NFA.h"
@@ -44,16 +42,7 @@ void NFA::printNFA(NFA_State* state, set<NFA_State*>& visited) {
     }
     // Mark the state as visited
     visited.insert(state);
-//    cout << "state id: "<< state->get_id() << "   is it final?  " << state->isFinalState() << endl<< counter<<endl;
 
-    // Print the state and its transitions
-    /*for (auto& transition : state->getTransitions()) {
-        cout << "State " << state->get_id() << " --" << transition.first << "--> ";
-        for (auto& next_state : transition.second) {
-            cout << "State " << next_state->get_id() <<" , ";
-        }
-        cout << endl;
-    }*/
 
     // Recursively print all reachable states
     for (auto& transition : state->getTransitions()) {
@@ -140,8 +129,7 @@ NFA* NFA::handleCharacter(vector<string>& expression, int& i) {
 
 NFA* NFA::buildNFA(vector<string> expression) {
     stack < NFA* > s;
-//  cout<< expression.size()<<endl;
-//    print_expression(expression);
+
     for(int i = 0;i < (int)expression.size();++i)
     {
         if(expression[i] == " ")
@@ -178,9 +166,7 @@ NFA* NFA::buildNFA(vector<string> expression) {
     }
 
     NFA *result = s.top();    s.pop();
-//    set<NFA_State*> vis;
-//    result->printNFA(result->start_state,vis);
-//    cout<<"================================"<<endl;
+
     return result;
 }
 
@@ -227,8 +213,7 @@ void NFA::join(NFA *pNfa) {
     newStart ->addTransition(EPSILON, this -> start_state);
     newStart -> addTransition(EPSILON, pNfa-> start_state);
     this -> start_state = newStart;
-//    this -> accept_state->addTransition(EPSILON, this->accept_state);
-//    this -> accept_state->addTransition(EPSILON, pNfa->accept_state);
+
 
 }
 

@@ -114,7 +114,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
             return runDFA(reminder, start);
         } else {
             // Token not accepted
-            this->out = this->out + "ERROR in symbol  " + str + '\n';
+            this->out = this->out + "not accepted symbol  " + str + '\n';
         }
     }
 

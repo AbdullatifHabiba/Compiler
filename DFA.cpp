@@ -37,7 +37,7 @@ set<NFA_State*> DFA::e_closure(const set<NFA_State*>& T)
     return returned_set;
 }
 
-set<NFA_State*> DFA::move(const set<NFA_State*>& T, char input)
+set<NFA_State*> DFA::reduce(const set<NFA_State*>& T, char input)
 {
     set<NFA_State*> returned_set;
     for (auto state : T)
@@ -61,14 +61,14 @@ set<DFA_State*> DFA::Converter(NFA_State* start)
     s->set_content(returned);
     DFA.insert(s);
     unmarked.push(s);
-    set<char> alpha = get_alpha(start);
+    set<char> alpha = get_all_inputs(start);
     while(!unmarked.empty())
     {
         DFA_State *temp = unmarked.front();
         unmarked.pop();
         for (char it : alpha)
         {
-            set<NFA_State*> destination = move(temp->get_content(),it);
+            set<NFA_State*> destination = reduce(temp->get_content(), it);
             bool flag = false;
             DFA_State* test ;
             for (auto d : DFA)
@@ -98,7 +98,7 @@ set<DFA_State*> DFA::Converter(NFA_State* start)
     return DFA;
 }
 
-set<char> DFA::get_alpha(NFA_State* s)
+set<char> DFA::get_all_inputs(NFA_State* s)
 {
     set <char> alpha;
     queue < NFA_State* > current;

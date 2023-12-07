@@ -102,8 +102,8 @@ int DFA_State::get_priority() const {
     return this->priority;
 }
 
-void DFA_State::set_priority(int priority) {
-    this->priority = priority;
+void DFA_State::set_priority(int priority1) {
+    this->priority = priority1;
 
 }
 

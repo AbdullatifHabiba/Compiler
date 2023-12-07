@@ -26,8 +26,8 @@ private:
 
     void e_closure(NFA_State *s);
     set<NFA_State*> e_closure(const set<NFA_State*>& T);
-    set<NFA_State*> move(const set<NFA_State*>& T, char input);
-    static set<char> get_alpha(NFA_State*);
+    set<NFA_State*> reduce(const set<NFA_State*>& T, char input);
+    static set<char> get_all_inputs(NFA_State *s);
 
 
 };
