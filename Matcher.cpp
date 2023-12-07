@@ -77,7 +77,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
         }
     }
 
-    if (temp != nullptr && temp->isFinalState() && temp == last) {
+    if (temp->isFinalState() && temp == last) {
         // Token with acceptance, process the accepted part
 
         // Token is accepted

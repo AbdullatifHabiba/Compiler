@@ -259,7 +259,7 @@ void NFA::OR(NFA* A)
 }
 
 void NFA::concatenate(NFA *A) {
-    this -> start_state -> addTransition(EPSILON, A -> start_state);
+    this -> accept_state -> addTransition(EPSILON, A -> start_state);
     this -> accept_state -> setFinalState(false);
     this -> accept_state = A -> accept_state;
 

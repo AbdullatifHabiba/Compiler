@@ -71,18 +71,7 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
 
         }
     }
-//Now we have the states each in its corresponding group
-// print the groups
-//cout << "group1 size " << grouping[0].size() << endl;
-//    for (int i = 0 ; i < (int) grouping[0].size() ; i++)
-//    {
-//        cout << "group " << i << "  ";
-//        for (auto it : grouping[0][i])
-//        {
-//            cout << it -> get_id() << ' '<< it->get_token() << ' ';
-//        }
-//        cout << endl;
-//    }
+
 
 
 
@@ -138,28 +127,6 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         bit ^= 1;
 
     }
-    // PRint the first row as alphabet
-//    cout << "t              ";
-//    for (auto it : alpha)
-//    {
-//        cout << it << "    ";
-//    }
-//    cout << endl;
-//   // print  one state of each groub  and their destinations
-//    for (int i = 0 ; i < (int) grouping[bit].size() ; i++)
-//    {
-//        DFA_State* temp = *(grouping[bit][i].begin());
-//        cout << temp -> get_id() << ' '<< temp->get_token() << "     ,";
-//        typedef map<char, DFA_State* > :: const_iterator MapIterator;
-//        for (auto & transaction : temp -> transactions)
-//        {
-//            cout  << transaction.second -> get_id() << "  , ";
-//        }
-//        cout << endl;
-//
-//
-//    }
-
 
 
 
@@ -170,15 +137,13 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
     bool flag = false;
     //push empty states to new_st with number of all groups in the DFA
     vector <DFA_State* > new_st ;
-    cout<< " Size ???----------------->>>>>>>>>>"<<grouping[bit].size()<<endl;
     for (int i = 0 ; i < (int) grouping[bit].size() ; i++)
     {
         auto* st = new DFA_State(i);
         new_st.push_back(st);
     }
 
-    //we want to enforce group contain start state to be at index=0
-    // for each group in the DFA
+
     for (int i = 0 ; i < (int) grouping[0].size() ; i++)
     {
         for (auto it = grouping[0][i].begin(); it != grouping[0][i].end(); it++)
@@ -237,9 +202,7 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         if (start_index < i ) {ind = i;}
         else {ind = i+1;}
 
-//        new_st[ind] -> set_content((*it) -> get_content());
-//        cout<< " Tell me why :::::::::::::::::::::::::::::::         "<<i<<endl;
-//        cout<< " Tell me Token :::::::::::::::::::::::::::::::         "<<(*it) -> get_token()<<endl;
+
         new_st[ind] -> set_final((*it) -> isFinalState());
         new_st[ind] -> set_token((*it) -> get_token());
         new_st[ind] -> set_priority((*it) -> get_priority());
@@ -270,15 +233,7 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
         }
     }
 
-//    for (int i = 0 ; i < (int) grouping[0].size() ; i++)
-//    {
-//        cout << "here ---> " << i << " content ";
-//        for (auto it : grouping[0][i])
-//        {
-//            cout << it -> get_id() << ' ' << it -> get_token() << ' ';
-//        }
-//        cout << endl;
-//    }
+
 
     for (auto i : new_st)
     {
@@ -294,57 +249,120 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
 
     return result;
 }
+bool check_Keywords_letters(char ch){
+
+    return ch=='i' || ch=='f'|| ch=='b' || ch == 'e'||ch=='w';
+}
+/*void Minimize::printTransitionTable(const set<DFA_State*>& Mfa)
+{
+    // declare the output file
+    ofstream out("graph.dot");
+    cout << "the graph of the DFA is " << Mfa.size() << endl;
+    out << "digraph finite_state_machine {\n";
+    out << "rankdir=LR;\n";
+    //out << "size=\"30,30\"\n";
+    out << "node [shape = circle];\n";
+
+    // Create a map to store transitions with their labels
+    map<pair<int, int>, string> transitions;
+
+    for (auto state : Mfa)
+    {
+        // If the state is final, make it a double circle
+        if (state->isFinalState())
+            out << state->get_id() << " [shape = doublecircle];\n";
+
+        for (auto trs : state->getTransitions())
+        {
+            // Use a pair of source state ID and target state ID as the key
+            pair<int, int> key = make_pair(state->get_id(), trs.second->get_id());
+
+            // Append the label to the existing labels for this transition
+            if (transitions.count(key) > 0)
+            {
+                transitions[key] += ", " + string(1, trs.first);
+            }
+            else
+            {
+                transitions[key] = string(1, trs.first);
+            }
+        }
+    }
+
+    // Print the transitions
+    for (const auto& trs : transitions)
+    {
+        out << trs.first.first << " -> " << trs.first.second;
+        out << " [ label = \"" << trs.second << "\" ];\n";
+    }
+
+    out << "}\n";
+    out.close();
+}*/
 void Minimize::printTransitionTable(const set<DFA_State*>& Mfa)
 {
     // declare the output file
-    ofstream out("trsM.txt");
-
-    cout << "MinDfa Transition Table" << endl;
-    cout << "-------------------" << endl;
-
-    cout << endl;
-    // print the header of the rows
-    cout << "S\t";
-    out << "S\t    ";
-    // get all the alphabet of the DFA
-    set<char> alphabet;
-    for (auto state : Mfa)
-    {
-        for (auto trs: state->getTransitions())
-        {
-            alphabet.insert(trs.first);
-        }
-    }
-    for (auto ch : alphabet)
-    {
-        cout << ch << "\t";
-        out << ch << "\t";
-    }
-    cout << endl;
-    out << endl;
+    ofstream out("graph.dot");
+    cout<<"the graph of the DFA is "<<Mfa.size()<<endl;
+    out << "digraph finite_state_machine {\n";
+    out << "rankdir=LR;\n";
+    //out << "size=\"30,30\"\n";
+    out << "node [shape = circle];\n";
 
 
+    // Create a map to store transitions with their labels
+    map<pair<int, int>, string> transitions;
 
     for(auto state : Mfa)
     {
-        cout << state->get_id()<<"("<< state->get_token()<< ")\t";
+        // If the state is final, make it a double circle
+        if (state->isFinalState())
+            out << state->get_id() << " [shape = doublecircle];\n";
 
-        out << state->get_id() <<"("<< state->get_token()<< ")\t";
         for(auto trs: state->getTransitions())
         {
-            cout << trs.second->get_id() << "\t";
-            out << trs.second->get_id() << "\t";
+            // Use a pair of source state ID and target state ID as the key
+            pair<int, int> key = make_pair(state->get_id(), trs.second->get_id());
+
+            // Append the label to the existing labels for this transition
+            if (transitions.count(key) > 0)
+            {
+                // Check if the transition is a letter or a digit and not in keywords_start_letter
+                if ((isalpha(trs.first) &&!check_Keywords_letters(trs.first)) && transitions[key].find("letter") == string::npos)
+                    transitions[key] += ", letter";
+                else if (isdigit(trs.first) && transitions[key].find("digit") == string::npos)
+                    transitions[key] += ", digit";
+
+                else if ((!isalpha(trs.first) && !isdigit(trs.first)))
+                    transitions[key] += ", " + string(1, trs.first);
+                else if(check_Keywords_letters(trs.first))
+                    transitions[key] += ", " + string(1, trs.first);
+
+
+            }
+            else
+            {
+                if (isalpha(trs.first)&&!check_Keywords_letters(trs.first))
+                    transitions[key] = "letter";
+                else if (isdigit(trs.first))
+                    transitions[key] = "digit";
+                else
+                    transitions[key] = string(1, trs.first);
+            }
         }
-        cout << endl;
-        out << endl;
     }
+
+    // Print the transitions
+    for (auto trs : transitions)
+    {
+        out << trs.first.first << " -> " << trs.first.second;
+        out << " [ label = \"" << trs.second << "\" ];\n";
+    }
+
+    out << "}\n";
     out.close();
-
-
-
-
-
 }
+
 
 DFA_State *Minimize::get_start_state() const {
     return this->start_state;
