@@ -3,6 +3,3 @@ int sum , count , pass , mnt; while (pass !=
 {
 pass = pass + 1 ;
 }
-{
-pass = pass + 1 ;
-}

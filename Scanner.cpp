@@ -36,24 +36,24 @@ NFA *Scanner::getWords() {
     while (getline(is, line)) {
         if (line[0] == '{')                  // keyword
         {
-            cout<<"parseKeyword : "<< line<<endl;
-            parseKeyword(line);
+            cout<<"handleKeywords : "<< line<<endl;
+            handleKeywords(line);
         } else if (line[0] == '[')             // punctuation
         {
-            cout<<"parsePunctuation :"<< line<<endl;
+            cout<<"handlePunctuation :"<< line<<endl;
 
-            parsePunctuation(line);
+            handlePunctuation(line);
         } else {
             for (int i = 0; i < (int) line.size(); ++i) {
                 if (line[i] == ':')          // regular expression
                 {
                     cout<<"regular expression :"<< line<<endl;
-                    parseExpression(line, i);
+                    handleExpression(line, i);
                     break;
                 } else if (line[i] == '=')     // regular Definition
                 {
                     cout<<"regular Definition :"<< line<<endl;
-                    parseDefinition(line, i);
+                    handleDefinition(line, i);
                     break;
                 }
             }
@@ -61,9 +61,7 @@ NFA *Scanner::getWords() {
     }
     if (keywords != nullptr) {
         keywords->accept_state->setFinalState(true);
-//        cout<<"keywords"<<endl;
-//        set<NFA_State*>S;
-//        keywords->printNFA(keywords->start_state,S);
+
 
         if (finalNFA == nullptr)
             finalNFA = keywords;
@@ -73,9 +71,6 @@ NFA *Scanner::getWords() {
 
     if (punctuation != nullptr) {
         punctuation->accept_state->setFinalState(true);
-//        cout<<"punctuation"<<endl;
-//        set<NFA_State*>S;
-//        punctuation->printNFA(punctuation->start_state,S);
 
         if (finalNFA == nullptr)
             finalNFA = punctuation;
@@ -89,7 +84,7 @@ NFA *Scanner::getWords() {
 
 
 
-void Scanner::parseKeyword(string &input) {
+void Scanner::handleKeywords(string &input) {
     NFA *currentKeyword ;
 
     for (int i = 1; i < (int) input.size(); ++i) {
@@ -116,7 +111,7 @@ void Scanner::parseKeyword(string &input) {
     }
 }
 
-void Scanner::parsePunctuation(string &input) {
+void Scanner::handlePunctuation(string &input) {
     NFA *currentPunctuation ;
 
     for (int i = 1; i < (int) input.size(); ++i) {
@@ -142,7 +137,7 @@ void Scanner::parsePunctuation(string &input) {
     }
 }
 
-void Scanner::parseExpression(string &input, int &i) {
+void Scanner::handleExpression(string &input, int &i) {
     string expression = input.substr(0, i);
 
     int k = ++i;
@@ -185,8 +180,8 @@ void Scanner::parseExpression(string &input, int &i) {
     }
 
     vector<string> tokens = getTokens(finalExpression);
+    vector<string> expressionPost = createPostfix(tokens);
 
-    vector<string> expressionPost = generatePostfix(tokens);
 
     NFA *NFAExpression = (new NFA())->buildNFA(expressionPost);
 
@@ -232,7 +227,7 @@ vector<string> Scanner::getTokens(string &input) {
     return result;
 }
 
-vector<string> Scanner::generatePostfix(vector<string> &tokens) {
+vector<string> Scanner::createPostfix(vector<string> &tokens) {
     vector<string> result;
     string operations = "+-*|()";
     stack<string> s;
@@ -294,7 +289,7 @@ vector<string> Scanner::generatePostfix(vector<string> &tokens) {
     return result;
 }
 
-void Scanner::parseDefinition(string &input, int &i) {
+void Scanner::handleDefinition(string &input, int &i) {
     string finalIdentifier;
     int z = i;
 

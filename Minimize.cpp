@@ -294,18 +294,20 @@ set<DFA_State*> Minimize:: DFA_min (const set<DFA_State*>& DFA){
 
     return result;
 }
+bool check_Keywords_letters(char ch){
+    return ch=='i' || ch=='f'|| ch=='b' || ch == 'e'||ch=='w';
+}
+
 void Minimize::printTransitionTable(const set<DFA_State*>& Mfa)
 {
     // declare the output file
-    ofstream out("trsM.txt");
+    ofstream out("graph.dot");
+    cout<<"the graph of the DFA is "<<Mfa.size()<<endl;
+    out << "digraph finite_state_machine {\n";
+    out << "rankdir=LR;\n";
+    out << "size=\"30,30\"\n";
+    out << "node [shape = circle];\n";
 
-    cout << "MinDfa Transition Table" << endl;
-    cout << "-------------------" << endl;
-
-    cout << endl;
-    // print the header of the rows
-    cout << "S\t";
-    out << "S\t    ";
     // get all the alphabet of the DFA
     set<char> alphabet;
     for (auto state : Mfa)
@@ -315,36 +317,57 @@ void Minimize::printTransitionTable(const set<DFA_State*>& Mfa)
             alphabet.insert(trs.first);
         }
     }
-    for (auto ch : alphabet)
-    {
-        cout << ch << "\t";
-        out << ch << "\t";
-    }
-    cout << endl;
-    out << endl;
+    // kewords start letter list
 
-
+    // Create a map to store transitions with their labels
+    map<pair<int, int>, string> transitions;
 
     for(auto state : Mfa)
     {
-        cout << state->get_id()<<"("<< state->get_token()<< ")\t";
-
-        out << state->get_id() <<"("<< state->get_token()<< ")\t";
         for(auto trs: state->getTransitions())
         {
-            cout << trs.second->get_id() << "\t";
-            out << trs.second->get_id() << "\t";
+            // Use a pair of source state ID and target state ID as the key
+            pair<int, int> key = make_pair(state->get_id(), trs.second->get_id());
+
+            // Append the label to the existing labels for this transition
+            if (transitions.count(key) > 0)
+            {
+                // Check if the transition is a letter or a digit and not in keywords_start_letter
+                if ((isalpha(trs.first) &&!check_Keywords_letters(trs.first)) && transitions[key].find("letter") == string::npos)
+                    transitions[key] += ", letter";
+                else if (isdigit(trs.first) && transitions[key].find("digit") == string::npos)
+                    transitions[key] += ", digit";
+
+                else if ((!isalpha(trs.first) && !isdigit(trs.first)))
+                    transitions[key] += ", " + string(1, trs.first);
+                else if(check_Keywords_letters(trs.first))
+                    transitions[key] += ", " + string(1, trs.first);
+
+
+            }
+            else
+            {
+                if (isalpha(trs.first)&&!check_Keywords_letters(trs.first))
+                    transitions[key] = "letter";
+                else if (isdigit(trs.first))
+                    transitions[key] = "digit";
+                else
+                    transitions[key] = string(1, trs.first);
+            }
         }
-        cout << endl;
-        out << endl;
     }
+
+    // Print the transitions
+    for (auto trs : transitions)
+    {
+        out << trs.first.first << " -> " << trs.first.second;
+        out << " [ label = \"" << trs.second << "\" ];\n";
+    }
+
+    out << "}\n";
     out.close();
-
-
-
-
-
 }
+
 
 DFA_State *Minimize::get_start_state() const {
     return this->start_state;

@@ -22,22 +22,24 @@ private:
     NFA * getWords();
     string file;
 
-    void parseKeyword(string &input);
+    void handleKeywords(string &input);
     vector<string> tokenTypes;
     NFA* keywords ;
     NFA* punctuation ;
     NFA* finalNFA ;
 
 
-    void parsePunctuation(string &input);
+    void handlePunctuation(string &input);
 
-    void parseExpression(string &input, int &i);
+    void handleExpression(string &input, int &i);
 
     vector<string> getTokens(string &input);
 
-    static vector<string> generatePostfix(vector<string> &tokens);
+    static vector<string> createPostfix(vector<string> &tokens);
 
-    void parseDefinition(string &input, int &i);
+    void handleDefinition(string &input, int &i);
+
+    void processInput(string &input, int &i, string &finalExpression);
 };
 
 
