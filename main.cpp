@@ -33,6 +33,8 @@ int main() {
     set<DFA_State*> MDFA_ = MD->minimize_dfa_states(DFA_);
     cout<<"MinDfa   # States =  " <<MDFA_.size()<<endl;
     MD->printMinGraph(MDFA_);
+    // print the table of the min DFA
+    D->printTransitionTable(MDFA_);
     cout <<"start matching"<<endl;
     cout<< "-->>Start state "<<MD->get_start_state()->get_id()<<endl;
     Matcher matcher;

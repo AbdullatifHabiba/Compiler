@@ -177,9 +177,9 @@ out << endl;
 
     for(auto state : Dfa)
     {
-        cout << state->get_id()<<"("<< state->get_token()<< ")\t";
+        cout << state->get_id()<<"\t    ";
 
-        out << state->get_id() <<"("<< state->get_token()<< ")\t";
+        out << state->get_id() << state->get_id()<<"\t";
         for(auto trs: state->getTransitions())
         {
             cout << trs.second->get_id() << "\t";
