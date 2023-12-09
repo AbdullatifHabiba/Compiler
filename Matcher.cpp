@@ -70,7 +70,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
     for (int i = 0; i < str.size(); i++) {
         temp = temp->get_next(str[i]);
-        cout<<str[i]<<" "<<temp->get_token()<<" "<<"  state_number "<<  temp->get_id() <<endl;
+        cout<<str[i]<<" "<<temp->get_token()<<" "<<"  state_number "<<  temp->get_id()<<"  " << temp->isFinalState()<<endl;
         if (temp->isFinalState()) {
             last = temp;
             pos = i;
@@ -114,7 +114,9 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
             return runDFA(reminder, start);
         } else {
             // Token not accepted
-            this->out = this->out + "not accepted symbol  " + str + '\n';
+            std::string reminder = str.substr(pos + 1);
+            this->out = this->out + "not accepted symbol  " + str[pos] + '\n';
+            return runDFA(reminder, start);
         }
     }
 

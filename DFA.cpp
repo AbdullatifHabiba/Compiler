@@ -179,7 +179,7 @@ out << endl;
     {
         cout << state->get_id()<<"\t    ";
 
-        out << state->get_id() << state->get_id()<<"\t";
+        out <<  state->get_id()<<"\t    ";
         for(auto trs: state->getTransitions())
         {
             cout << trs.second->get_id() << "\t";
