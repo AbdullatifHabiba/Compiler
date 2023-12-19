@@ -58,12 +58,12 @@ void CFG_Reader::buildRule(const std::string& line) {
             t.setIsTerminal(false);
             rule->addDerivedString(t);}
         } else if (line[i] == '\'') {  // terminal
-            std::string x = "'";
+            std::string x;
             while (line[i + 1] != '\'')
                 name += line[++i];
 
             ++i;
-            x += name + "'";
+            x += name ;
 
             tokens.push_back(x);
             Token t = Token();
