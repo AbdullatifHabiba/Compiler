@@ -5,7 +5,7 @@
 #include "DFA.h"
 #include "Minimize.h"
 #include "Matcher.h"
-int main() {
+int mai() {
     // intilize  scanner
     Scanner scanner;
 

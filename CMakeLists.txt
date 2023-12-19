@@ -17,4 +17,10 @@ add_executable(compilers main.cpp
         DFA_State.cpp
         DFA_State.h
         Minimize.cpp
-        Minimize.h)
+        Minimize.h
+        CFGRule.cpp
+        CFGRule.h
+        CFGReader.cpp
+        CFGReader.h
+        Token.cpp
+        Token.h)
