@@ -1,6 +1,3 @@
-//
-// Created by abdu on 11/25/23.
-//
 
 #ifndef COMPILERS_SCANNER_H
 #define COMPILERS_SCANNER_H
@@ -15,7 +12,7 @@ public:
     Scanner();
     ~Scanner();
     NFA* scan(string pFile );
-    map < string , string > identifiers;
+    map < string , string > definitions;
     NFA* getFinalNFA();
 
 private:
@@ -23,7 +20,6 @@ private:
     string file;
 
     void handleKeywords(string &input);
-    vector<string> tokenTypes;
     NFA* keywords ;
     NFA* punctuation ;
     NFA* finalNFA ;
@@ -39,7 +35,7 @@ private:
 
     void handleDefinition(string &input, int &i);
 
-    void processInput(string &input, int &i, string &finalExpression);
+    static vector<string> handleStack(vector<string> &tokens, stack<string> &s, string &operations, int i);
 };
 
 

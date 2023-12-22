@@ -19,7 +19,6 @@ Scanner::Scanner() {
     keywords = nullptr;
     punctuation = nullptr;
     finalNFA = nullptr;
-    tokenTypes = {"Keyword", "Punctuation"};
 
 }
 
@@ -147,8 +146,8 @@ void Scanner::handleExpression(string &input, int &i) {
         if (input[i] == ' ') {
             if (i - 1 >= k) {
                 string x = input.substr(k, i - k);
-                if (identifiers.find(x) != identifiers.end())
-                    finalExpression += "(" + identifiers[x] + ")";
+                if (definitions.find(x) != definitions.end())
+                    finalExpression += "(" + definitions[x] + ")";
                 else
                     finalExpression += x;
             }
@@ -160,8 +159,8 @@ void Scanner::handleExpression(string &input, int &i) {
 
             if (i - 1 >= k) {
                 string x = input.substr(k, i - k);
-                if (identifiers.find(x) != identifiers.end())
-                    finalExpression += "(" + identifiers[x] + ")";
+                if (definitions.find(x) != definitions.end())
+                    finalExpression += "(" + definitions[x] + ")";
                 else
                     finalExpression += x;
             }
@@ -173,8 +172,8 @@ void Scanner::handleExpression(string &input, int &i) {
 
     if (i > k) {
         string x = input.substr(k, i - k);
-        if (identifiers.find(x) != identifiers.end())
-            finalExpression += "(" + identifiers[x] + ")";
+        if (definitions.find(x) != definitions.end())
+            finalExpression += "(" + definitions[x] + ")";
         else
             finalExpression += x;
     }
@@ -204,8 +203,8 @@ vector<string> Scanner::getTokens(string &input) {
             if (i and input[i - 1] == '\\') continue;
             if (i - 1 >= k) {
                 string x = input.substr(k, i - k);
-                if (identifiers.find(x) != identifiers.end())
-                    result.push_back("(" + identifiers[x] + ")");
+                if (definitions.find(x) != definitions.end())
+                    result.push_back("(" + definitions[x] + ")");
                 else
                     result.push_back(x);
             }
@@ -218,8 +217,8 @@ vector<string> Scanner::getTokens(string &input) {
     }
     if (i > k) {
         string x = input.substr(k, i - k);
-        if (identifiers.find(x) != identifiers.end())
-            result.push_back("(" + identifiers[x] + ")");
+        if (definitions.find(x) != definitions.end())
+            result.push_back("(" + definitions[x] + ")");
         else
             result.push_back(x);
     }
@@ -234,48 +233,33 @@ vector<string> Scanner::createPostfix(vector<string> &tokens) {
     for (int i = 0; i < (int) tokens.size(); ++i) {
         if (i and tokens[i - 1] != "|" and tokens[i - 1] != "(" and tokens[i - 1] != "-" and
             (tokens[i] == "(" or operations.find(tokens[i]) == std::string::npos)) {
-            while (!s.empty()) {
-                if (s.top() == "*" or s.top() == "+" or s.top() == "-") {
-                    result.push_back(s.top());
-                    s.pop();
-                } else break;
-            }
-            s.emplace(" ");
+            vector<string> temp = handleStack(tokens, s, operations, i);
+            result.insert(result.end(), temp.begin(), temp.end());
         }
         if (tokens[i] == "(" or tokens[i] == "-")
             s.push(tokens[i]);
-
         else if (tokens[i] == ")") {
-            while (!s.empty()) {
-                if (s.top() == "(") {
-                    s.pop();
-                    break;
-                }
+            while (!s.empty() && s.top() != "(") {
                 result.push_back(s.top());
                 s.pop();
             }
+            if (!s.empty()) s.pop();
         } else if (tokens[i] == "*") {
-            while (!s.empty()) {
-                if (s.top() == "-") {
-                    result.push_back(s.top());
-                    s.pop();
-                } else break;
+            while (!s.empty() && s.top() == "-") {
+                result.push_back(s.top());
+                s.pop();
             }
             s.push(tokens[i]);
         } else if (tokens[i] == "+") {
-            while (!s.empty()) {
-                if (s.top() == "*" or s.top() == "-") {
-                    result.push_back(s.top());
-                    s.pop();
-                } else break;
+            while (!s.empty() && (s.top() == "*" or s.top() == "-")) {
+                result.push_back(s.top());
+                s.pop();
             }
             s.push(tokens[i]);
         } else if (tokens[i] == "|") {
-            while (!s.empty()) {
-                if (s.top() == "*" or s.top() == "-" or s.top() == "+" or s.top() == " ") {
-                    result.push_back(s.top());
-                    s.pop();
-                } else break;
+            while (!s.empty() && (s.top() == "*" or s.top() == "-" or s.top() == "+" or s.top() == " ")) {
+                result.push_back(s.top());
+                s.pop();
             }
             s.push(tokens[i]);
         } else
@@ -285,9 +269,22 @@ vector<string> Scanner::createPostfix(vector<string> &tokens) {
         result.push_back(s.top());
         s.pop();
     }
-
     return result;
 }
+vector<string> Scanner::handleStack(vector<string> &tokens, stack<string> &s, string &operations, int i) {
+    vector<string> result;
+    while (!s.empty()) {
+        if (s.top() == "*" or s.top() == "+" or s.top() == "-") {
+            result.push_back(s.top());
+            s.pop();
+        } else break;
+    }
+    s.emplace(" ");
+    return result;
+}
+
+
+
 
 void Scanner::handleDefinition(string &input, int &i) {
     string finalIdentifier;
@@ -302,8 +299,8 @@ void Scanner::handleDefinition(string &input, int &i) {
         if (input[i] == ' ') {
             if (i - 1 >= k) {
                 string x = input.substr(k, i - k);
-                if (identifiers.find(x) != identifiers.end())
-                    finalIdentifier += "(" + identifiers[x] + ")";
+                if (definitions.find(x) != definitions.end())
+                    finalIdentifier += "(" + definitions[x] + ")";
                 else
                     finalIdentifier += x;
             }
@@ -315,8 +312,8 @@ void Scanner::handleDefinition(string &input, int &i) {
 
             if (i - 1 >= k) {
                 string x = input.substr(k, i - k);
-                if (identifiers.find(x) != identifiers.end())
-                    finalIdentifier += "(" + identifiers[x] + ")";
+                if (definitions.find(x) != definitions.end())
+                    finalIdentifier += "(" + definitions[x] + ")";
 
                 else
                     finalIdentifier += x;
@@ -330,7 +327,7 @@ void Scanner::handleDefinition(string &input, int &i) {
     if (i > k)
         finalIdentifier += input.substr(k, i - k);
 
-    identifiers[id] = finalIdentifier;
+    definitions[id] = finalIdentifier;
 }
 
 NFA *Scanner::getFinalNFA() {

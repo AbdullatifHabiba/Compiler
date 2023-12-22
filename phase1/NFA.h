@@ -1,6 +1,4 @@
-//
-// Created by abdu on 11/25/23.
-//
+
 
 #ifndef COMPILERS_NFA_H
 #define COMPILERS_NFA_H

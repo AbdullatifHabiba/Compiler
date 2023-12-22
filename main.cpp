@@ -1,11 +1,11 @@
 #include <iostream>
-#include "Scanner.h"
-#include "NFA.h"
+#include "phase1/Scanner.h"
+#include "phase1/NFA.h"
 
-#include "DFA.h"
-#include "Minimize.h"
-#include "Matcher.h"
-int main() {
+#include "phase1/DFA.h"
+#include "phase1/Minimize.h"
+#include "phase1/Matcher.h"
+int mai() {
     // intilize  scanner
     Scanner scanner;
 
@@ -17,7 +17,7 @@ int main() {
 
 //    final->printNFA();
 
-   for(const auto &identifier : scanner.identifiers) {
+   for(const auto &identifier : scanner.definitions) {
        cout << identifier.first << " : " << identifier.second << endl;
     }
     set<NFA_State*> visited;
@@ -28,18 +28,20 @@ int main() {
     DFA *D = new DFA();
     set<DFA_State*> DFA_ = D->Converter(final->start_state);
     cout << "\nDFA # States = " << DFA_.size() <<endl<<endl;
-//    D->printTransitionTable(DFA_);
+//    D->printMinGraph(DFA_);
     auto *MD = new Minimize();
-    set<DFA_State*> MDFA_ = MD->DFA_min(DFA_);
-    cout<<"the MDFA_ size :::   ---->" <<MDFA_.size()<<endl;
-    MD->printTransitionTable(MDFA_);
+    set<DFA_State*> MDFA_ = MD->minimize_dfa_states(DFA_);
+    cout<<"MinDfa   # States =  " <<MDFA_.size()<<endl;
+    MD->printMinGraph(MDFA_);
+    // print the table of the min DFA
+    D->printTransitionTable(MDFA_);
     cout <<"start matching"<<endl;
-    cout<< "------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>Start state "<<MD->get_start_state()->get_id()<<endl;
+    cout<< "-->>Start state "<<MD->get_start_state()->get_id()<<endl;
     Matcher matcher;
+    matcher.setOutputFileName("output.txt");
     matcher.matchFileWithDFA(test_file_name, MD->get_start_state());
-    matcher.writeOutputToFile("output.txt");
-    // print the transition table
-    for (const auto& row : matcher.getTransitionTable()) {
+    // print the IdentifiersList
+    for (const auto& row : matcher.getIdentifiersList()) {
         std::cout << row << std::endl;
     }
     return 0;

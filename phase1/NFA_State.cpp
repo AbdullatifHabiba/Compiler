@@ -2,9 +2,7 @@
 
 #include <utility>
 
-void NFA_State::addEpsilonTransition(NFA_State *next_state) {
-    epsilonTransitions.push_back(next_state);
-}
+
 
 void NFA_State::addTransition(char rule, NFA_State *next_state) {
     transitions[rule].push_back(next_state);

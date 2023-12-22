@@ -6,7 +6,7 @@ using namespace std;
 Matcher::Matcher() {
     // Constructor implementation
     out = "";
-    transitionTable = std::vector<std::string>();
+    IdentifiersList = std::vector<std::string>();
     output_file_name = "";
 }
 
@@ -42,8 +42,8 @@ void Matcher::matchFileWithDFA(const std::string& file_name, DFA_State* start) {
     writeOutputToFile(output_file_name);
 }
 
-std::vector<std::string> Matcher::getTransitionTable() {
-    return transitionTable;
+std::vector<std::string> Matcher::getIdentifiersList() {
+    return IdentifiersList;
 }
 
 void Matcher::setOutputFileName(string outputFile) {
@@ -70,7 +70,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
     for (int i = 0; i < str.size(); i++) {
         temp = temp->get_next(str[i]);
-        cout<<str[i]<<" "<<temp->get_token()<<" "<<"  state_number "<<  temp->get_id() <<endl;
+        cout<<str[i]<<" "<<temp->get_token()<<" "<<"  state_number "<<  temp->get_id()<<"  " << temp->isFinalState()<<endl;
         if (temp->isFinalState()) {
             last = temp;
             pos = i;
@@ -91,7 +91,7 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
         }
 
         if (type == "id") {
-            this->transitionTable.push_back(str);
+            this->IdentifiersList.push_back(str);
         }
 
         return true;
@@ -107,14 +107,16 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
             }
 
             if (type == "id") {
-                this->transitionTable.push_back(str.substr(0, pos + 1));
+                this->IdentifiersList.push_back(str.substr(0, pos + 1));
             }
 
             std::string reminder = str.substr(pos + 1);
             return runDFA(reminder, start);
         } else {
             // Token not accepted
-            this->out = this->out + "ERROR in symbol  " + str + '\n';
+            std::string reminder = str.substr(pos + 1);
+            this->out = this->out + "not accepted symbol  " + str[pos] + '\n';
+            return runDFA(reminder, start);
         }
     }
 
