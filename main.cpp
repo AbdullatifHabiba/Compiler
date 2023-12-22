@@ -1,10 +1,10 @@
 #include <iostream>
-#include "Scanner.h"
-#include "NFA.h"
+#include "phase1/Scanner.h"
+#include "phase1/NFA.h"
 
-#include "DFA.h"
-#include "Minimize.h"
-#include "Matcher.h"
+#include "phase1/DFA.h"
+#include "phase1/Minimize.h"
+#include "phase1/Matcher.h"
 int mai() {
     // intilize  scanner
     Scanner scanner;

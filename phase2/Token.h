@@ -13,11 +13,10 @@ public:
     Token();
     ~Token();
 
-    void setName(const std::string& name);
+    void setName(const std::string& name1);
     [[nodiscard]] const std::string& getName() const;
-    bool isTerminal;
+    bool isTerminal{};
 
-    bool isTerminal1() const;
 
     void setIsTerminal(bool isTerminal);
 

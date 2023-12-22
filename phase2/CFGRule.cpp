@@ -8,11 +8,11 @@ CFGRule::CFGRule() = default;
 CFGRule::~CFGRule() = default;
 
 
-void CFGRule::setNonTerminal(const std::string& nterminal) {
-    this->nonTerminal = nterminal;
+void CFGRule::setNonTerminal(const std::string& non_terminal) {
+    this->nonTerminal = non_terminal;
 }
 
-void CFGRule::addDerivedString(const Token& derivedString) {
+void CFGRule::addDerivedString(const vector<Token>& derivedString) {
     derivedStrings.push_back(derivedString);
 }
 
@@ -20,7 +20,7 @@ const std::string& CFGRule::getNonTerminal() const {
     return nonTerminal;
 }
 
-const std::vector<Token>& CFGRule::getDerivedStrings() const {
+const std::vector<vector<Token>>& CFGRule::getDerivedStrings() const {
     return derivedStrings;
 }
 

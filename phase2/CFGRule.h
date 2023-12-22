@@ -14,19 +14,18 @@ public:
     ~CFGRule();
 
 
-    void setNonTerminal(const std::string& nterminal);
-    void addDerivedString(const Token& derivedString);
+    void setNonTerminal(const std::string& non_terminal);
+    void addDerivedString(const vector<Token>& derivedString);
 
     [[nodiscard]] const std::string& getNonTerminal() const;
-    [[nodiscard]] const std::vector<Token>& getDerivedStrings() const;
+    [[nodiscard]] const std::vector<vector<Token>>& getDerivedStrings() const;
     bool isStart{};
 
 
 
 private:
-    bool isStartRule{};
     std::string nonTerminal;
-    std::vector<Token> derivedStrings;
+    std::vector<vector<Token>> derivedStrings;
 
 
 };
