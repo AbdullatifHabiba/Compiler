@@ -108,7 +108,7 @@ void CFG_Reader::buildRule(const std::string& line) {
 
 }
 
-int main() {
+int man() {
     CFG_Reader cfgReader;
     std::string fileName = "/home/abdu/CLionProjects/compilers/phase2/cfg_rules.txt";  // Replace with the actual file path
 

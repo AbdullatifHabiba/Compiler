@@ -23,4 +23,6 @@ add_executable(compilers main.cpp
         phase2/CFGReader.cpp
         phase2/CFGReader.h
         phase2/Token.cpp
-        phase2/Token.h)
+        phase2/Token.h
+        phase2/Combiner.cpp
+        phase2/Combiner.h)
