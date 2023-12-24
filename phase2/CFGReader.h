@@ -24,6 +24,8 @@ public:
     void buildRule(const std::string& line);
     map  <std::string, CFGRule*> ProductionRules;
 
+    void print(map<string, CFGRule *> map);
+
 private:
     std::vector<CFGRule> rules;
     string start;

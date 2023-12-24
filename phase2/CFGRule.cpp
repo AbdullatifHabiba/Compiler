@@ -24,4 +24,8 @@ const std::vector<vector<Token>>& CFGRule::getDerivedStrings() const {
     return derivedStrings;
 }
 
+void CFGRule::setDerivedStrings(vector<vector<Token>> &tokens) {
+        derivedStrings = tokens;
+}
+
 

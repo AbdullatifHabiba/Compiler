@@ -15,7 +15,7 @@ using namespace std;
 #endif //COMPILERS_LL1_GENERATOR_H
 class LL1_Generator{
 public:
-    static map<string, CFGRule> LR_Elimination(map<string, CFGRule *>& LR_map);
-
+    static void LR_Elimination(map<string, CFGRule *>& LR_map);
     static void LF_Elimination(map<string, CFGRule *> &cfg);
+    void NonImmediate_LR_Elimination(map<string, CFGRule *> &cfg);
 };
