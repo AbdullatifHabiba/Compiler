@@ -33,8 +33,8 @@ void CFG_Reader::readRulesFromFile(const std::string& fileName) {
     buildRule(input);
 }
 
-const std::vector<CFGRule>& CFG_Reader::getRules() const {
-    return rules;
+const std::vector<string>& CFG_Reader::get_nonterminals() const {
+    return nonterminals;
 }
 
 const std::string &CFG_Reader::getStartState() const {
@@ -101,6 +101,7 @@ void CFG_Reader::buildRule(const std::string& line) {
     }
     rule->addDerivedString(tks);
     ProductionRules.insert(std::pair<std::string, CFGRule*>(tokens[0], rule));
+    nonterminals.push_back(tokens[0]);
     if(start.empty())
     {start = tokens[0];
      rule->isStart = true;
@@ -157,7 +158,7 @@ int main() {
     cout<<"\n\n\n\n";
     cout<< "LF Elimination" << endl;
     cfgReader.print(cfgReader.ProductionRules);
-    gen.NonImmediate_LR_Elimination(cfgReader.ProductionRules);
+    gen.NonImmediate_LR_Elimination(cfgReader.ProductionRules, cfgReader.get_nonterminals());
     cout<<"\n\n\n\n";
     cout<< "LR Elimination" << endl;
     cfgReader.print(cfgReader.ProductionRules);

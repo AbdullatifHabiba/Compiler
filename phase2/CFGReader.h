@@ -18,7 +18,7 @@ public:
     ~CFG_Reader();
 
     void readRulesFromFile(const std::string& fileName);
-    [[nodiscard]] const std::vector<CFGRule>& getRules() const;
+    [[nodiscard]] const std::vector<string>& get_nonterminals() const;
     [[nodiscard]] const std::string& getStartState() const;
 
     void buildRule(const std::string& line);
@@ -27,7 +27,7 @@ public:
     void print(map<string, CFGRule *> map);
 
 private:
-    std::vector<CFGRule> rules;
+    std::vector<string> nonterminals;
     string start;
 
 };

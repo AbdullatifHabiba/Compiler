@@ -30,7 +30,7 @@ void LL1_Generator::LF_Elimination(map<string, CFGRule*>& cfg) {
                 string newNonTerminal = rule.second->getNonTerminal() + "'";
                 Token newtoken , token  ;
                 token.setName(newNonTerminal);
-                newtoken.setName(group.first);
+                newtoken = group.second[0][0];
                 vector<Token> vec ;
                 vec.push_back(newtoken);
                 vec.push_back(token);
@@ -53,13 +53,7 @@ void LL1_Generator::LF_Elimination(map<string, CFGRule*>& cfg) {
     }
 }
 
-void LL1_Generator::NonImmediate_LR_Elimination(map<string, CFGRule*>& cfg) {
-    vector<string> nonTerminals;
-
-    // Get all non-terminals
-    for (const auto& rule : cfg) {
-        nonTerminals.push_back(rule.first);
-    }
+void LL1_Generator::NonImmediate_LR_Elimination(map<string, CFGRule*>& cfg, vector<string> nonTerminals ) {
 
     for (size_t i = 0; i < nonTerminals.size(); ++i) {
         for (size_t j = 0; j < i; ++j) {
