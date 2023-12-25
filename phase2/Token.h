@@ -11,8 +11,8 @@
 using namespace std;
 class Token {
 public:
-    Token();
 
+    Token() = default;  // Default constructor
     explicit Token(string name1) : name(std::move(name1)) {};
     bool operator == (const Token &rhs) const{
         return name == rhs.name;
