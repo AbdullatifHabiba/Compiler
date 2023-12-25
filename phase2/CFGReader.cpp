@@ -1,6 +1,8 @@
 // CFG_Reader.cpp
 #include "CFGReader.h"
 #include "LL1_Generator.h"
+#include "ParsingTable.h"
+#include "Combiner.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -132,7 +134,7 @@ void CFG_Reader::print(map<string, CFGRule*> map){
 int main() {
 
     CFG_Reader cfgReader;
-    std::string fileName = R"(C:\Users\Hardware\Desktop\TODO\Compiler1\phase2\cfg_rules.txt)";  // Replace with the actual file path
+    std::string fileName = "/home/abdu/CLionProjects/compilers/phase2/cfg_rules.txt";  // Replace with the actual file path
 
     cfgReader.readRulesFromFile(fileName);
     std::cout << "Start symbol: " << cfgReader.getStartState() << std::endl;
@@ -163,5 +165,16 @@ int main() {
     cout<<"\n\n\n\n";
     cout<< "LR Elimination" << endl;
     cfgReader.print(cfgReader.ProductionRules);
+    ParsingTable PT = ParsingTable( cfgReader.ProductionRules, cfgReader.getStartState() );
+    PT.Print_table("parse_table_OUT.txt");
+    Combiner combiner;
+    combiner.setParsingTable(PT);
+    vector<string> lexical_terminals = {"a", "a", "b", "$"};
+    combiner.setLexicalTerminals(lexical_terminals);
+
+    combiner.LL_Parse(Token(cfgReader.getStartState()));
+
+
+
     return 0;
 }

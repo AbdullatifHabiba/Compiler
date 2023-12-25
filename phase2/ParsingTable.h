@@ -10,7 +10,6 @@
 #include <bits/stdc++.h>
 #include "CFGReader.h"
 
-Token eps_symbol = Token("\'\\L\'");
 
 class ParsingTable{
 
@@ -42,6 +41,7 @@ public:
     void Print_table(std::string path);
 
     std::string get_production_name(std::vector<Token> vec);
+    Token eps_symbol = Token("\'\\L\'");
 
 private:
     std::map<Token , CFGRule > grammar;

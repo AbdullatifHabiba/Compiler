@@ -5,7 +5,7 @@
 #include "phase1/DFA.h"
 #include "phase1/Minimize.h"
 #include "phase1/Matcher.h"
-int mai() {
+int maiv() {
     // intilize  scanner
     Scanner scanner;
 

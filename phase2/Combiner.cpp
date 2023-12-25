@@ -6,8 +6,10 @@
 #include "Combiner.h"
 #include <fstream>
 #include <iostream>
-
+#include "ParsingTable.h"
 using namespace std;
+
+
 void Combiner::setLexicalTerminals(const vector<string> &lexical_terminals1) {
     this->lexical_terminals = lexical_terminals1;
 
@@ -51,7 +53,8 @@ void Combiner::LL_Parse(const Token& start) {
         } else {
             // Non-terminalt
             Token ab = Token(a);
-            pair<string,vector<Token>> entry = table[X][ab];
+            ab.setIsTerminal(true);
+            pair<string,vector<Token>> entry = parsingTable.get_entry(X,ab);
             cout<< "entry.first "<<entry.first<<endl;
             if(entry.first.empty()) { // empty cell
                 if(X.isTerminal ){
@@ -114,74 +117,78 @@ void Combiner::print_stack(stack<Token> s,std::ofstream& output_file) {
     cout<<endl;
 }
 
-
-int min() {
-    Combiner combiner;
-
-    // Initialize lexical terminals ceadb$
-    vector<string> lexical_terminals = {"a", "a", "b", "$"};
-   // vector<string> lexical_terminals = {"c", "e", "a","d","b", "$"};
-
-    combiner.setLexicalTerminals(lexical_terminals);
-
-    // Initialize table
-    map<Token, map<Token, pair<string, vector<Token>>>> table;
-
-    // Add your own table entries
-    // For example, for the rule S -> AbS
-    Token a("a");
-      a.setIsTerminal(true);
-    Token b("b");
-    b.setIsTerminal(true);
-    Token c("c");
-    c.setIsTerminal(true);
-    Token d("d");
-    d.setIsTerminal(true);
-    Token e("e");
-    e.setIsTerminal(true);
-    Token dl("$");
-    dl.setIsTerminal(true);
-    Token S("S");
-    Token A("A");
+void Combiner::setParsingTable(const ParsingTable &parsingTable1) {
+    Combiner::parsingTable = parsingTable1;
+}
 
 
-    Token epsilon("EPS");
-    epsilon.setIsTerminal(true);
-    vector<Token> production1 = {A, b, S};
-    vector<Token> production3 = {c, A, d};
-    table[S][a] = make_pair("S->AbS", production1);
-    table[S][b] = make_pair("error", vector<Token>{});
-    table[S][c] = make_pair("S->AbS", production1);
-    table[S][d] = make_pair("error", vector<Token>{});
-    table[S][e] = make_pair("S->e", vector<Token>{e});
-    table[S][dl] = make_pair("EPS", vector<Token>{epsilon});
-
-    table[A][a] = make_pair("A->a", vector<Token>{a});
-    table[A][b] = make_pair("sync", vector<Token>{});
-    table[A][c] = make_pair("A->cAd", production3);
-    table[A][d] = make_pair("sync", vector<Token>{});
-    table[A][e] = make_pair("error", vector<Token>{});
-    table[A][dl] = make_pair("error", vector<Token>{});
-    // Print the table
-    for (const auto &i: table) {
-
-        for (const auto &j: i.second) {
-            cout << "[" << i.first.getName() << " , ";
-            cout << j.first.getName() << " ] ->  ";
-            cout << j.second.first;
-            cout << endl;
-        }
-    }
-        cout << endl;
-        // Add other rules similarly
-
-        combiner.setTable(table);
-
-
-        // Call LL_Parse method
-        combiner.LL_Parse(S);
-
-        return 0;
-    }
-
+//int min() {
+//    Combiner combiner;
+//
+//    // Initialize lexical terminals ceadb$
+//    vector<string> lexical_terminals = {"a", "a", "b", "$"};
+//   // vector<string> lexical_terminals = {"c", "e", "a","d","b", "$"};
+//
+//    combiner.setLexicalTerminals(lexical_terminals);
+//
+//    // Initialize table
+//    map<Token, map<Token, pair<string, vector<Token>>>> table;
+//
+//    // Add your own table entries
+//    // For example, for the rule S -> AbS
+//    Token a("a");
+//      a.setIsTerminal(true);
+//    Token b("b");
+//    b.setIsTerminal(true);
+//    Token c("c");
+//    c.setIsTerminal(true);
+//    Token d("d");
+//    d.setIsTerminal(true);
+//    Token e("e");
+//    e.setIsTerminal(true);
+//    Token dl("$");
+//    dl.setIsTerminal(true);
+//    Token S("S");
+//    Token A("A");
+//
+//
+//    Token epsilon("EPS");
+//    epsilon.setIsTerminal(true);
+//    vector<Token> production1 = {A, b, S};
+//    vector<Token> production3 = {c, A, d};
+//    table[S][a] = make_pair("S->AbS", production1);
+//    table[S][b] = make_pair("error", vector<Token>{});
+//    table[S][c] = make_pair("S->AbS", production1);
+//    table[S][d] = make_pair("error", vector<Token>{});
+//    table[S][e] = make_pair("S->e", vector<Token>{e});
+//    table[S][dl] = make_pair("EPS", vector<Token>{epsilon});
+//
+//    table[A][a] = make_pair("A->a", vector<Token>{a});
+//    table[A][b] = make_pair("sync", vector<Token>{});
+//    table[A][c] = make_pair("A->cAd", production3);
+//    table[A][d] = make_pair("sync", vector<Token>{});
+//    table[A][e] = make_pair("error", vector<Token>{});
+//    table[A][dl] = make_pair("error", vector<Token>{});
+//    // Print the table
+//    for (const auto &i: table) {
+//
+//        for (const auto &j: i.second) {
+//            cout << "[" << i.first.getName() << " , ";
+//            cout << j.first.getName() << " ] ->  ";
+//            cout << j.second.first;
+//            cout << endl;
+//        }
+//    }
+//        cout << endl;
+//        // Add other rules similarly
+//
+//        combiner.setTable(table);
+//
+//
+//        // Call LL_Parse method
+//        combiner.LL_Parse(S);
+//
+//        return 0;
+//    }
+//
 
