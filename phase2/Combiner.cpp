@@ -115,7 +115,7 @@ void Combiner::print_stack(stack<Token> s,std::ofstream& output_file) {
 }
 
 
-int main() {
+int min() {
     Combiner combiner;
 
     // Initialize lexical terminals ceadb$
