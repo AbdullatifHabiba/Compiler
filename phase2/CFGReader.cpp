@@ -130,6 +130,7 @@ void CFG_Reader::print(map<string, CFGRule*> map){
 }
 
 int main() {
+
     CFG_Reader cfgReader;
     std::string fileName = R"(C:\Users\Hardware\Desktop\TODO\Compiler1\phase2\cfg_rules.txt)";  // Replace with the actual file path
 
