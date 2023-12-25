@@ -1,5 +1,6 @@
 // CFG_Reader.cpp
 #include "CFGReader.h"
+#include "LL1_Generator.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -32,8 +33,8 @@ void CFG_Reader::readRulesFromFile(const std::string& fileName) {
     buildRule(input);
 }
 
-const std::vector<CFGRule>& CFG_Reader::getRules() const {
-    return rules;
+const std::vector<string>& CFG_Reader::get_nonterminals() const {
+    return nonterminals;
 }
 
 const std::string &CFG_Reader::getStartState() const {
@@ -100,6 +101,7 @@ void CFG_Reader::buildRule(const std::string& line) {
     }
     rule->addDerivedString(tks);
     ProductionRules.insert(std::pair<std::string, CFGRule*>(tokens[0], rule));
+    nonterminals.push_back(tokens[0]);
     if(start.empty())
     {start = tokens[0];
      rule->isStart = true;
@@ -108,12 +110,31 @@ void CFG_Reader::buildRule(const std::string& line) {
 
 }
 
-int man() {
+void CFG_Reader::print(map<string, CFGRule*> map){
+    cout << "Production Rules size : " << map.size() << endl;
+    std::cout << "Production Rules:::::::::::::::::::::::::::\n";
+    for(const auto& rule : map) {
+        std::cout << rule.first << " -> ";
+        const std::vector<vector<Token>>& derivedStrings = rule.second->getDerivedStrings();
+        for(const auto& derivedString : derivedStrings) {
+            for(const auto& token : derivedString) {
+                std::cout << token.getName() << " ";
+                cout << token.isTerminal << " ";
+            }
+            // cout only if there are more derived strings and the current one is not the last
+            if(derivedStrings.size() > 1 && &derivedString != &derivedStrings.back()) std::cout << "| ";
+
+        }
+        std::cout << std::endl;
+    }
+}
+
+int main() {
+
     CFG_Reader cfgReader;
-    std::string fileName = "/home/abdu/CLionProjects/compilers/phase2/cfg_rules.txt";  // Replace with the actual file path
+    std::string fileName = R"(C:\Users\Hardware\Desktop\TODO\Compiler1\phase2\cfg_rules.txt)";  // Replace with the actual file path
 
     cfgReader.readRulesFromFile(fileName);
-
     std::cout << "Start symbol: " << cfgReader.getStartState() << std::endl;
     cout << "Production Rules size : " << cfgReader.ProductionRules.size() << endl;
     std::cout << "Production Rules:\n";
@@ -132,6 +153,15 @@ int man() {
         std::cout << std::endl;
     }
 
-
+    // Apply left factoring and left recursion
+    LL1_Generator gen;
+    gen.LF_Elimination(cfgReader.ProductionRules);
+    cout<<"\n\n\n\n";
+    cout<< "LF Elimination" << endl;
+    cfgReader.print(cfgReader.ProductionRules);
+    gen.NonImmediate_LR_Elimination(cfgReader.ProductionRules, cfgReader.get_nonterminals());
+    cout<<"\n\n\n\n";
+    cout<< "LR Elimination" << endl;
+    cfgReader.print(cfgReader.ProductionRules);
     return 0;
 }
