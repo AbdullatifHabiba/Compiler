@@ -16,7 +16,7 @@ class ParsingTable{
 public:
 //    using THALB =std::unordered_map<Token, std::unordered_map<Token, std::pair<std::string, std::vector<Token>>>>;
     ParsingTable(const  std::map<std::string, CFGRule*> &rules,const string startState);
-
+   ParsingTable();
 
     /**
      * Returns a first set of any symbol
@@ -41,7 +41,7 @@ public:
     void Print_table(std::string path);
 
     std::string get_production_name(std::vector<Token> vec);
-    Token eps_symbol = Token("\'\\L\'");
+    Token eps_symbol = Token("\\L");
 
 private:
     std::map<Token , CFGRule > grammar;

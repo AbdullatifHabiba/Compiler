@@ -320,6 +320,10 @@ string ParsingTable::get_production_name(vector<Token> vec) {
     return str1;
 }
 
+ParsingTable::ParsingTable() {
+
+}
+
 int mai() {
     CFG_Reader cfgReader;
     std::string fileName = "D:\\studying\\Compilers\\ass1\\C\\Compiler\\phase2\\test.txt";  // Replace with the actual file path

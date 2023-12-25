@@ -32,12 +32,16 @@ void Combiner::LL_Parse(const Token& start) {
 
     while (true) {
         outfile << "Stack: ";
+        cout<<"stack : ";
         print_stack(this->parse_stack,outfile);
         outfile << "Input: ";
+        cout<<"input : ";
         for (int i = index; i < this->lexical_terminals.size(); i++) {
             outfile << this->lexical_terminals[i] << " ";
+            cout<<this->lexical_terminals[i] << " ";
         }
         outfile << std::endl;
+        cout<<endl;
         Token X = this->parse_stack.top();
         string a = this->lexical_terminals[index];
 
@@ -54,6 +58,13 @@ void Combiner::LL_Parse(const Token& start) {
             // Non-terminalt
             Token ab = Token(a);
             ab.setIsTerminal(true);
+            cout<< "non_terminal "<<X.getName()<<endl;
+            cout<< "terminal "<<ab.getName()<<endl;
+             if(X.getName() == "\\L") {
+                this->parse_stack.pop();
+                outfile << X.getName() << "-> EPS" << std::endl;
+                continue;
+            }
             pair<string,vector<Token>> entry = parsingTable.get_entry(X,ab);
             cout<< "entry.first "<<entry.first<<endl;
             if(entry.first.empty()) { // empty cell
@@ -67,10 +78,7 @@ void Combiner::LL_Parse(const Token& start) {
                     outfile<<"Error: Illegal(" +X.getName()+ " ) - discard  "<<a <<endl;
                     index++;
                 }
-            } else if(entry.first == "EPS") {
-                this->parse_stack.pop();
-                outfile << X.getName() << "-> EPS" << std::endl;
-            } else if (entry.first == "sync") { // adding sync
+            }  else if (entry.first == "sync") { // adding sync
                 // Error
                 string s = "Error sync:: " +  X.getName() + " -> Discarded ";
                 outfile << s << std::endl;
@@ -112,14 +120,18 @@ void Combiner::LL_Parse(const Token& start) {
 void Combiner::print_stack(stack<Token> s,std::ofstream& output_file) {
     while(!s.empty()){
         output_file<<s.top().getName()<<" ";
+        cout<<s.top().getName()<<" ";
         s.pop();
     }
     cout<<endl;
+    output_file<<endl;
 }
 
 void Combiner::setParsingTable(const ParsingTable &parsingTable1) {
     Combiner::parsingTable = parsingTable1;
 }
+
+Combiner::Combiner() = default;
 
 
 //int min() {

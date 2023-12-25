@@ -86,12 +86,20 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
         if (type == "keyword" || type == "punctuation") {
             this->out = this->out + str + '\n';
+            terminals.emplace_back(str);
+
         } else {
             this->out = this->out + type + '\n';
+            if(type =="assign"){
+                terminals.emplace_back("=");
+            } else terminals.emplace_back(type);
+
         }
+
 
         if (type == "id") {
             this->IdentifiersList.push_back(str);
+        }else{
         }
 
         return true;
@@ -102,8 +110,14 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
             cout << "type : " << type << endl;
             if (type == "keyword" || type == "punctuation") {
                 this->out = this->out + str.substr(0, pos + 1) + '\n';
+                terminals.push_back(str.substr(0, pos + 1));
+
             } else {
                 this->out = this->out + type + '\n';
+                if(type =="assign"){
+                    terminals.emplace_back("=");
+                } else terminals.emplace_back(type);
+
             }
 
             if (type == "id") {
@@ -116,9 +130,15 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
             // Token not accepted
             std::string reminder = str.substr(pos + 1);
             this->out = this->out + "not accepted symbol  " + str[pos] + '\n';
+            terminals.push_back(str.substr(pos, pos + 1));
+
             return runDFA(reminder, start);
         }
     }
 
     return false;
+}
+
+const vector<string> &Matcher::getTerminals() const {
+    return terminals;
 }

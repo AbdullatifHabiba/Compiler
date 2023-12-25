@@ -131,7 +131,7 @@ void LL1_Generator::LR_Elimination(map<string, CFGRule*>& cfg) {
 
         // Add an empty string to the new rule
         Token eps ;
-        eps.setName("epsilon");
+        eps.setName("\\L");
         eps.setIsTerminal(true);
         vector<Token> emptyStr;
         emptyStr.push_back(eps);

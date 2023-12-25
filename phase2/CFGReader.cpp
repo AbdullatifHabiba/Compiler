@@ -8,6 +8,7 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include "Combiner.h"
 using namespace std;
 CFG_Reader::CFG_Reader() = default;
 
@@ -96,7 +97,11 @@ void CFG_Reader::buildRule(const std::string& line) {
         }else{
             Token t = Token();
             t.setName(tokens[i]);
-            if(tokens[i][0] == '\'') t.setIsTerminal(true);
+            if(tokens[i][0] == '\'') {
+                t.setIsTerminal(true);
+                //remove ' from terminal
+                t.setName(tokens[i].substr(1, tokens[i].size() - 2));
+            }
             else t.setIsTerminal(false);
             tks.push_back(t);
         }
@@ -131,7 +136,7 @@ void CFG_Reader::print(map<string, CFGRule*> map){
     }
 }
 
-int main() {
+int mainm() {
 
     CFG_Reader cfgReader;
     std::string fileName = "/home/abdu/CLionProjects/compilers/phase2/cfg_rules.txt";  // Replace with the actual file path
