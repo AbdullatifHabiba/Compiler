@@ -45,6 +45,13 @@ void LL1_Generator::LF_Elimination(map<string, CFGRule*>& cfg) {
                     vector<Token> newStr(str.begin() + 1, str.end());
                     newRule->addDerivedString(newStr);
                 }
+                // Add an empty string to the new rule
+                Token eps ;
+                eps.setName("\\L");
+                eps.setIsTerminal(true);
+                vector<Token> emptyStr;
+                emptyStr.push_back(eps);
+                newRule->addDerivedString(emptyStr);
                 // Add the new rule to the CFG
                 cfg[newNonTerminal] = newRule;
             }

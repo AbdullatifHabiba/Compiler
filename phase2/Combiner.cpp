@@ -48,7 +48,15 @@ void Combiner::LL_Parse(const Token& start) {
         if (X.getName() == a && a == "$") {
             outfile << "Parser halts (successful completion)" << std::endl;
             break;
-        } else if (X.getName() == a) {
+        }
+        else if (X.getName() != a && a == "$") {
+
+                // insert this token should be in input
+                outfile<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
+                parse_stack.pop();
+
+
+        }else if (X.getName() == a) {
             // Terminal
             outfile << "Matched: " << a << std::endl;
 
@@ -58,7 +66,7 @@ void Combiner::LL_Parse(const Token& start) {
             // Non-terminalt
             Token ab = Token(a);
             ab.setIsTerminal(true);
-            cout<< "non_terminal "<<X.getName()<<endl;
+            cout<< "non_terminal "<<X.getName()<< X.isTerminal<<endl;
             cout<< "terminal "<<ab.getName()<<endl;
              if(X.getName() == "\\L") {
                 this->parse_stack.pop();
