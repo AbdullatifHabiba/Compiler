@@ -49,7 +49,7 @@ void Combiner::LL_Parse(const Token& start) {
             outfile << "Parser halts (successful completion)" << std::endl;
             break;
         }
-        else if (X.getName() != a && a == "$") {
+        else if (X.getName() != a && a == "$" && X.isTerminal) {
 
                 // insert this token should be in input
                 outfile<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
