@@ -99,7 +99,6 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
 
         if (type == "id") {
             this->IdentifiersList.push_back(str);
-        }else{
         }
 
         return true;
@@ -128,9 +127,16 @@ bool Matcher::runDFA(std::string str, DFA_State* start) {
             return runDFA(reminder, start);
         } else {
             // Token not accepted
+            cout << "str  " << str << endl;
+            // if size of str is 1
+            if (str.size() == 1) {
+                this->out = this->out + "not accepted symbol  " + str + '\n';
+               // terminals.push_back(str);
+                return false;
+            }
             std::string reminder = str.substr(pos + 1);
             this->out = this->out + "not accepted symbol  " + str[pos] + '\n';
-            terminals.push_back(str.substr(pos, pos + 1));
+            //terminals.push_back(str.substr(pos, pos + 1));
 
             return runDFA(reminder, start);
         }

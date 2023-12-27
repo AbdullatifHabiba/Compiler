@@ -111,7 +111,7 @@ void Combiner::LL_Parse(const Token& start) {
                 // output the rule
                 for (int i = entry.second.size() - 1; i >= 0; i--) {
                     this->parse_stack.push(entry.second[i]);
-                    outfile << entry.second[entry.second.size() - 1-i].getName() << "";
+                    outfile << entry.second[entry.second.size() - 1-i].getName() << " ";
                 }
                 outfile << std::endl;
 
