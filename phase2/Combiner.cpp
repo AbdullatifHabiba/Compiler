@@ -23,7 +23,6 @@ void Combiner::setTable(const map<Token, map<Token, pair<string, vector<Token>>>
 void Combiner::LL_Parse(const Token& start) {
 
     std::ofstream outfile("cfg_output.txt");
-
     Token token = Token("$");
     this->parse_stack.push(token);
     this->parse_stack.push(start);
@@ -53,13 +52,13 @@ void Combiner::LL_Parse(const Token& start) {
 
                 // insert this token should be in input
                 outfile<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
+               // dr<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
                 parse_stack.pop();
 
 
         }else if (X.getName() == a) {
             // Terminal
             outfile << "Matched: " << a << std::endl;
-
             this->parse_stack.pop();
             index++;
         } else {
@@ -71,6 +70,7 @@ void Combiner::LL_Parse(const Token& start) {
              if(X.getName() == "\\L") {
                 this->parse_stack.pop();
                 outfile << X.getName() << "-> EPS" << std::endl;
+               // dr << X.getName() << "-> EPS" << std::endl;
                 continue;
             }
             pair<string,vector<Token>> entry = parsingTable.get_entry(X,ab);
@@ -79,28 +79,33 @@ void Combiner::LL_Parse(const Token& start) {
                 if(X.isTerminal ){
                     // insert this token should be in input
                     outfile<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
+                    //dr<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
                     parse_stack.pop();
                 }
                 else{
                     // discard this token
                     outfile<<"Error: Illegal(" +X.getName()+ " ) - discard  "<<a <<endl;
+                    //dr<<"Error: Illegal(" +X.getName()+ " ) - discard  "<<a <<endl;
                     index++;
                 }
             }  else if (entry.first == "sync") { // adding sync
                 // Error
                 string s = "Error sync:: " +  X.getName() + " -> Discarded ";
                 outfile << s << std::endl;
+                //dr << s << std::endl;
                 this->parse_stack.pop();
             } else if (entry.first == "error") {
                 // Error
                 if(X.isTerminal){
                     // insert this token should be in input
                     outfile<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
+                   // dr<<"Error:missing  "<< X.getName()<<" , inserted"<<endl;
                     parse_stack.pop();
                 }
                 else{
                     // discard this token
                     outfile<<"Error: Illegal(" +X.getName()+ " ) - discard  "<<a <<endl;
+                    //dr<<"Error: Illegal(" +X.getName()+ " ) - discard  "<<a <<endl;
                     index++;
                 }
 
@@ -114,25 +119,31 @@ void Combiner::LL_Parse(const Token& start) {
                     outfile << entry.second[entry.second.size() - 1-i].getName() << " ";
                 }
                 outfile << std::endl;
+              //  dr << std::endl;
 
             }
         }
     }
     outfile.close();
+    //dr.close();
 
 
 
 
 }
+std::ofstream dr("derivation.txt");
 
 void Combiner::print_stack(stack<Token> s,std::ofstream& output_file) {
+
     while(!s.empty()){
         output_file<<s.top().getName()<<" ";
         cout<<s.top().getName()<<" ";
+        if (s.top().getName() !="$")dr<<s.top().getName()<<" ";
         s.pop();
     }
     cout<<endl;
     output_file<<endl;
+    dr<<endl;
 }
 
 void Combiner::setParsingTable(const ParsingTable &parsingTable1) {
