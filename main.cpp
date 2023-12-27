@@ -14,8 +14,8 @@ int main() {
     // intilize  scanner
     Scanner scanner;
 
-    string file_name ="/home/abdu/CLionProjects/compilers/input.txt";
-    string test_file_name ="/home/abdu/CLionProjects/compilers/test.txt";
+    string file_name ="C:\\Users\\mahmo\\CLionProjects\\Compiler\\input.txt";
+    string test_file_name ="C:\\Users\\mahmo\\CLionProjects\\Compiler\\test.txt";
 
     scanner.scan(file_name);
     NFA* final= scanner.getFinalNFA();
@@ -52,7 +52,7 @@ int main() {
             cout<<tr<<endl;
         }
     CFG_Reader cfgReader;
-    std::string fileName = "/home/abdu/CLionProjects/compilers/phase2/cfg_rules.txt";  // Replace with the actual file path
+    std::string fileName = "C:\\Users\\mahmo\\CLionProjects\\Compiler\\phase2\\cfg_rules.txt";  // Replace with the actual file path
 
     cfgReader.readRulesFromFile(fileName);
     std::cout << "Start symbol: " << cfgReader.getStartState() << std::endl;

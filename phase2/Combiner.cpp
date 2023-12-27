@@ -132,14 +132,30 @@ void Combiner::LL_Parse(const Token& start) {
 
 }
 std::ofstream dr("derivation.txt");
+string derivedTerminals = "";
 
 void Combiner::print_stack(stack<Token> s,std::ofstream& output_file) {
-
+    dr<<derivedTerminals;
+    int counter=0;
     while(!s.empty()){
         output_file<<s.top().getName()<<" ";
         cout<<s.top().getName()<<" ";
-        if (s.top().getName() !="$")dr<<s.top().getName()<<" ";
+        bool flag=false,flag2=false;
+        if(counter==0){
+            flag=true;
+        }
+        if (s.top().getName() !="$"){
+            if(s.top().isTerminal&&(flag || flag2)){
+                derivedTerminals.append(s.top().getName()+" ");
+                flag2=true;
+            }else{
+                flag2=false;
+            }
+
+            dr<<s.top().getName()<<" ";
+        }
         s.pop();
+        counter++;
     }
     cout<<endl;
     output_file<<endl;
