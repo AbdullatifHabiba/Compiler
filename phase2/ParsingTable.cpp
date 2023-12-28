@@ -10,11 +10,11 @@
 
 using namespace std;
 //std::vector<CFGRule>& rules
-ParsingTable::ParsingTable(const  std::map<std::string, CFGRule*> &rules,const string startState) {
+ParsingTable::ParsingTable(const  std::map<std::string, CFGRule*> &rules,const string& startState) {
     //get all non-terminals in a list
-    for(auto r : rules){
-        for(auto prods : r.second->getDerivedStrings()){
-            for(auto prod:prods){
+    for(const auto& r : rules){
+        for(const auto& prods : r.second->getDerivedStrings()){
+            for(const auto& prod:prods){
                 if(prod.isTerminal){
                     this->TerminalsList.insert(prod);
                 }
@@ -27,11 +27,11 @@ ParsingTable::ParsingTable(const  std::map<std::string, CFGRule*> &rules,const s
         this->grammar.insert({symbol, *r.second});
     }
 
-    for(auto gr:this->grammar){
+    for(const auto& gr:this->grammar){
         cout<< gr.first.getName()<<endl;
-        for(auto hhabd : gr.second.getDerivedStrings()){
+        for(const auto& hhabd : gr.second.getDerivedStrings()){
 
-            for (auto i : hhabd) {
+            for (const auto& i : hhabd) {
             cout<< i.getName()<<", ";
             }
         }
@@ -39,11 +39,11 @@ ParsingTable::ParsingTable(const  std::map<std::string, CFGRule*> &rules,const s
     }
 
     //Return to check the assumption
-    string start_symbol = startState;
+    const string& start_symbol = startState;
     Token end_symbol = Token("$");
     end_symbol.setIsTerminal(true);
 
-    for(auto r : rules){
+    for(const auto& r : rules){
         Token rToken = Token(r.first);
         rToken.setIsTerminal(false);
         First_computation(rToken,* r.second);
@@ -99,7 +99,7 @@ vector<Token> ParsingTable::Production_of_first(Token &non_terminal, Token &firs
     vector<Token> ret ;
     CFGRule prods = this->grammar.at(non_terminal);
 
-    for(auto prod : prods.getDerivedStrings()){
+    for(const auto& prod : prods.getDerivedStrings()){
         set<Token> curr_first = {eps_symbol};
         for(auto symbol : prod){
             const set<Token> first_set = this->get_first(symbol);
@@ -124,7 +124,7 @@ vector<Token> ParsingTable::Production_of_first(Token &non_terminal, Token &firs
 
 void ParsingTable::Terminals_follow_nonTerminals(){
 
-    for(auto it : this->grammar ){
+    for(const auto& it : this->grammar ){
         for(auto prod : it.second.getDerivedStrings()){
             set<Token> curr_follow;
             for(int i = prod.size() - 1 ; i >= 0 ; i-- ){
@@ -159,7 +159,7 @@ void ParsingTable::Right_most_follow(){
     while (true){ // keep apply the rule until there is no change in the non-terminals follow sets
         bool change = false;
         int old_size, new_size;
-        for(auto  it : this->grammar){
+        for(const auto&  it : this->grammar){
             const set<Token> curr_follow = this->follow.at(it.first.getName());//follow of LHS
             for(auto prod : it.second.getDerivedStrings()){
                 for(int i = prod.size() - 1 ; i >= 0 && !prod[i].isTerminal ; i-- ) {
@@ -243,7 +243,7 @@ void ParsingTable::Create_table(){
             tableRow.insert({ itr, make_pair("production", Production_of_first(nonTerm, itr))});
         }
 
-        for (auto itr : followSet) {
+        for (const auto& itr : followSet) {
             if (hasEpsilon) {
                 tableRow.insert({ itr, make_pair("production", epsProd)});
             }
@@ -263,20 +263,20 @@ pair<string, vector<Token>> ParsingTable::get_entry(Token& non_terminal, Token& 
     return row.at(terminal);
 }
 
-void ParsingTable::Print_table(string path) {
+void ParsingTable::Print_table(const string& path) {
     ofstream myFile;
     vector<string> terminalsVector;
 
-    for (auto itr : this->TerminalsList) {
+    for (const auto& itr : this->TerminalsList) {
         if(itr.getName()==eps_symbol.getName()){ continue;}
         terminalsVector.push_back(itr.getName());
     }
-    terminalsVector.push_back("$");
+    terminalsVector.emplace_back("$");
 
     myFile.open(path);
 //    myFile << "non-terminal/terminal";
     bool first=true;
-    for (auto itr : terminalsVector) {
+    for (const auto& itr : terminalsVector) {
         if(first){
             myFile << "  "<<(itr);
             first=false;
@@ -287,9 +287,9 @@ void ParsingTable::Print_table(string path) {
     }
     myFile << "\n";
 
-    for (auto itr : this->Table) {
+    for (const auto& itr : this->Table) {
         myFile << itr.first.getName() << ", " ;//NT
-        for (auto term :terminalsVector) {
+        for (const auto& term :terminalsVector) {
             Token temp1 = itr.first;
             Token temp2 = Token(term);
             temp2.setIsTerminal(true);
@@ -310,10 +310,10 @@ void ParsingTable::Print_table(string path) {
     myFile.close();
 }
 
-string ParsingTable::get_production_name(vector<Token> vec) {
+string ParsingTable::get_production_name(const vector<Token>& vec) {
     string str1 = "";
     string str2 ;
-    for (auto itr : vec) {
+    for (const auto& itr : vec) {
         str2 = itr.getName();
         str1.append( str2  + " ");
     }
@@ -326,13 +326,13 @@ ParsingTable::ParsingTable() {
 
 int mai() {
     CFG_Reader cfgReader;
-    std::string fileName = "D:\\studying\\Compilers\\ass1\\C\\Compiler\\phase2\\test.txt";  // Replace with the actual file path
+    std::string fileName = R"(D:\studying\Compilers\ass1\C\Compiler\phase2\test.txt)";  // Replace with the actual file path
 
     cfgReader.readRulesFromFile(fileName);
 
     ParsingTable PT = ParsingTable( cfgReader.ProductionRules, cfgReader.getStartState() );
 
-    PT.Print_table("D:\\studying\\Compilers\\ass1\\C\\Compiler\\phase2\\OUT.txt");
+    PT.Print_table(R"(D:\studying\Compilers\ass1\C\Compiler\phase2\OUT.txt)");
 
     return 0;
 }
