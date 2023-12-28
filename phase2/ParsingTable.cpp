@@ -58,7 +58,6 @@ ParsingTable::ParsingTable(const  std::map<std::string, CFGRule*> &rules,const s
         }
         cout<<endl;
     }
-//------------------------------------------
     this->follow.at(start_symbol).insert(end_symbol); // rule 1
     this->Terminals_follow_nonTerminals();
     cout<<"After Terminals_follow_nonTerminals"<<endl;
