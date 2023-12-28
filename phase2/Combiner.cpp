@@ -9,7 +9,6 @@
 #include "ParsingTable.h"
 using namespace std;
 
-
 void Combiner::setLexicalTerminals(const vector<string> &lexical_terminals1) {
     this->lexical_terminals = lexical_terminals1;
 
@@ -133,33 +132,41 @@ void Combiner::LL_Parse(const Token& start) {
 }
 std::ofstream dr("derivation.txt");
 string derivedTerminals = "";
+string prevDerived = "";
+string previous = "";
+string curr = "";
 
 void Combiner::print_stack(stack<Token> s,std::ofstream& output_file) {
-    dr<<derivedTerminals;
+    prevDerived = derivedTerminals;
     int counter=0;
     while(!s.empty()){
         output_file<<s.top().getName()<<" ";
         cout<<s.top().getName()<<" ";
-        bool flag=false,flag2=false;
+        bool flag1=false,flag2=false;
         if(counter==0){
-            flag=true;
+            flag1=true;
         }
-        if (s.top().getName() !="$"){
-            if(s.top().isTerminal&&(flag || flag2)){
+        if (s.top().getName() !="$" ){
+            if(s.top().isTerminal&&(flag1 || flag2)){
                 derivedTerminals.append(s.top().getName()+" ");
                 flag2=true;
             }else{
-                flag2=false;
+                flag2 = false;
             }
-
-            dr<<s.top().getName()<<" ";
+            curr.append(s.top().getName()+" ");
         }
+
         s.pop();
         counter++;
     }
+    curr = prevDerived + curr;
+    if(curr!=previous){
+        dr<<curr<<endl;
+        previous = curr;
+    }
+    curr="";
     cout<<endl;
     output_file<<endl;
-    dr<<endl;
 }
 
 void Combiner::setParsingTable(const ParsingTable &parsingTable1) {

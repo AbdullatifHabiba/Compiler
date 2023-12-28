@@ -13,6 +13,7 @@
 using namespace std;
 class Combiner {
 public:
+
     Combiner();
     //set the lexical terminals
     void setLexicalTerminals(const vector<string>& lexical_terminals);
