@@ -1,0 +1,6 @@
+  '(', ')', '*', '+', 'id', $
+A, ER, '\L' , ER, '+' T A , ER, '\L' , 
+B, ER, '\L' , '*' F B , '\L' , ER, '\L' , 
+E, T A , sync, ER, ER, T A , sync, 
+F, '(' E ')' , sync, sync, sync, 'id' , sync, 
+T, F B , sync, ER, sync, F B , sync, 

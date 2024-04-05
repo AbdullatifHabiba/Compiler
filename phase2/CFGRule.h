@@ -19,6 +19,7 @@ public:
 
     [[nodiscard]] const std::string& getNonTerminal() const;
     [[nodiscard]] const std::vector<vector<Token>>& getDerivedStrings() const;
+    void  setDerivedStrings(std::vector<vector<Token>>& tokens);
     bool isStart{};
 
 

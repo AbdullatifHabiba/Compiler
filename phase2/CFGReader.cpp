@@ -1,10 +1,14 @@
 // CFG_Reader.cpp
 #include "CFGReader.h"
+#include "LL1_Generator.h"
+#include "ParsingTable.h"
+#include "Combiner.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <algorithm>
 #include <map>
+#include "Combiner.h"
 using namespace std;
 CFG_Reader::CFG_Reader() = default;
 
@@ -32,8 +36,8 @@ void CFG_Reader::readRulesFromFile(const std::string& fileName) {
     buildRule(input);
 }
 
-const std::vector<CFGRule>& CFG_Reader::getRules() const {
-    return rules;
+const std::vector<string>& CFG_Reader::get_nonterminals() const {
+    return nonterminals;
 }
 
 const std::string &CFG_Reader::getStartState() const {
@@ -93,13 +97,18 @@ void CFG_Reader::buildRule(const std::string& line) {
         }else{
             Token t = Token();
             t.setName(tokens[i]);
-            if(tokens[i][0] == '\'') t.setIsTerminal(true);
+            if(tokens[i][0] == '\'') {
+                t.setIsTerminal(true);
+                //remove ' from terminal
+                t.setName(tokens[i].substr(1, tokens[i].size() - 2));
+            }
             else t.setIsTerminal(false);
             tks.push_back(t);
         }
     }
     rule->addDerivedString(tks);
     ProductionRules.insert(std::pair<std::string, CFGRule*>(tokens[0], rule));
+    nonterminals.push_back(tokens[0]);
     if(start.empty())
     {start = tokens[0];
      rule->isStart = true;
@@ -108,12 +117,31 @@ void CFG_Reader::buildRule(const std::string& line) {
 
 }
 
-int main() {
+void CFG_Reader::print(map<string, CFGRule*> map){
+    cout << "Production Rules size : " << map.size() << endl;
+    std::cout << "Production Rules:::::::::::::::::::::::::::\n";
+    for(const auto& rule : map) {
+        std::cout << rule.first << " -> ";
+        const std::vector<vector<Token>>& derivedStrings = rule.second->getDerivedStrings();
+        for(const auto& derivedString : derivedStrings) {
+            for(const auto& token : derivedString) {
+                std::cout << token.getName() << " ";
+                cout << token.isTerminal << " ";
+            }
+            // cout only if there are more derived strings and the current one is not the last
+            if(derivedStrings.size() > 1 && &derivedString != &derivedStrings.back()) std::cout << "| ";
+
+        }
+        std::cout << std::endl;
+    }
+}
+
+int mainm() {
+
     CFG_Reader cfgReader;
     std::string fileName = "/home/abdu/CLionProjects/compilers/phase2/cfg_rules.txt";  // Replace with the actual file path
 
     cfgReader.readRulesFromFile(fileName);
-
     std::cout << "Start symbol: " << cfgReader.getStartState() << std::endl;
     cout << "Production Rules size : " << cfgReader.ProductionRules.size() << endl;
     std::cout << "Production Rules:\n";
@@ -131,6 +159,26 @@ int main() {
                     }
         std::cout << std::endl;
     }
+
+    // Apply left factoring and left recursion
+    LL1_Generator gen;
+    gen.LF_Elimination(cfgReader.ProductionRules);
+    cout<<"\n\n\n\n";
+    cout<< "LF Elimination" << endl;
+    cfgReader.print(cfgReader.ProductionRules);
+    gen.NonImmediate_LR_Elimination(cfgReader.ProductionRules, cfgReader.get_nonterminals());
+    cout<<"\n\n\n\n";
+    cout<< "LR Elimination" << endl;
+    cfgReader.print(cfgReader.ProductionRules);
+    ParsingTable PT = ParsingTable( cfgReader.ProductionRules, cfgReader.getStartState() );
+    PT.Print_table("parse_table_OUT.txt");
+    Combiner combiner;
+    combiner.setParsingTable(PT);
+    vector<string> lexical_terminals = {"a", "a", "b", "$"};
+    combiner.setLexicalTerminals(lexical_terminals);
+
+    combiner.LL_Parse(Token(cfgReader.getStartState()));
+
 
 
     return 0;

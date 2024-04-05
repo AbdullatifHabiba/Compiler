@@ -16,6 +16,9 @@ private:
     string out;
     vector<string> IdentifiersList;
     string output_file_name;
+    vector<string> terminals;
+public:
+    const vector<string> &getTerminals() const;
 
 public:
     Matcher();
